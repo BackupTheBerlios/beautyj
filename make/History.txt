@@ -1,0 +1,180 @@
+------------------------------------------------------------------------------
+Version 1.1, 2004-09-29
+------------------------------------------------------------------------------
+
+- Adopted changes of the underlying AMODA framework:
+  - added parameter 'useShortcut' to 
+    de.gulden.application.beautyj.BeautyJ.parseIndividualOption()
+  - changed call to GenericOptions.getEntries() to 
+    GenericOptions.getEntries().values() (getEntries() now returns a Map)
+  - Changes in application.xml, now renamed to BeautyJ.xml:
+    - adopted version number and some syntax changes
+    - introduced more option-groups levels
+  - Main.java: invoke BeautyJ via GUIApplicationEnvironment, allowing optional
+    auto-gui mode. See code comments.
+  - Log messages are no longer sent directly to System.out, but via AMODA for
+    compatibility with auto-gui
+
+- **** SOME OPTIONS HAVE CHANGED ***
+  Auto-generation or removal of Javadoc comments is now configured through
+  less options. Instead of using one boolean option per possible action on
+  each possible element, options now refer to actions only, elements to work
+  on are given in the value part. Also, the prefix "doc" is no longer used.
+  Example:
+  -old options: -doc.class.description.create.text=on 
+                -doc.class.author.create.text=on
+  is equivalent to              
+  -new option:  -class.create.text=description,author
+  See doc/beautyJ.html.
+
+- Solved bug #002436: Code indentation in inner classes is incorrect.
+  More severe handling of code-indentation: code blocks are now un-indented
+  during parsing and completely re-indented to the level they belong when
+  building beautified source. Originally, the indentation was kept as parsed
+  (unless -code.format was set), but this caused problems when rebuilding the
+  source of inner classes inside other classes. (Thanks to Jonah.)
+
+- Solved bug #000672: Constructor of class Method is not declared public.
+  Keyword "public" added. (All bugs should be of that kind...)
+
+- Solved bug #000671: Inner classes which are public will not be seen from
+  outside references to inner classes are now properly resolved, with respect
+  to 
+  - inner classes of the currently beautified class
+  - inner classes of other classes to be beautified among the input sources
+  - inner classes of classes on the classpath
+  
+- Better ANT integration when using BeautyJ as an ANT-task.
+  Parameters are now passed the 'official' Bean-like way, using setter-methods
+  in class de.gulden.application.beautyj.ant.Task. (The old implementation was 
+  a little hacky and had become incompatible with ANT 1.6 or higher.)
+  Note that in ANT, parameter names contain '_' instead of '.' as seperators
+  (e.g. 'auhor_name' instead of 'author.name').
+
+- More severe results of switch '-code.format'. Line-breaks should now appear
+  correctly. Blank lines are preserved, consecutive blank lines
+  (more than one in sequence) are normalized to become one blank line.
+  Also fixed a (non-documented) bug which caused the last line of code to
+  disappear if it ended with a line-comment (thanks to Santiago Martin 
+  Mendoza). Note that the '-code.format' switch still provides only a very
+  simple way of auto-formatting inner method-bodies (without parsing, only
+  based on string transformation).
+  
+- Solved bug #000862: Unicode characters (\u...) cause incorrect behaviour.
+  Escaped unicode characters are now correctly preserved in the generated
+  source, unicode-processing of the JavaCC-generated parser has been disabled.
+  (See de.gulden.util.javasource.jjt.JavaCharStream, previously called 
+  de.gulden.util.javasource.jjt.ASCII_UCodeESC_CharStream.)
+  In order to handle single-char constants in unicode-notation, a workaround
+  has been introduced (see SourceParser#workaroundAvoidUnicodeSingleChar,
+  SourceParser#workaroundRestoreUnicodeSingleChar).
+
+- Solved bug #000670: Parser crashes if a comment without line-break ends a
+  file. A workaround has been included which makes sure that the parser always
+  sees a line-break at the end of its input.
+
+- Solved bug #000620: Will not recognize classes in the same package. (Thanks
+  to pskhanwale.) This was less a bug than a feature request. If single files 
+  are specified as inputs, classes from the same source package would have had
+  to be accessible via classpath, as only the specified input files would have
+  been loaded to search for classes.
+  This behaviour has been extended, BeautyJ now looks in the same source
+  directory for other class files and parses them internally if that is
+  needed to qualify identifiers used from other sources. Note that this does
+  not apply to source files from different packages, if you want them to be
+  referenceable, either include them as input sources, or compile them and put
+  the classes on the classpath.
+
+- Solved bug #00673: Generating XJava XML produces wrong <interface>-
+  declarations. The XJava-output now contains correct 
+  <extends interface=".."/>-tags inside interface declaration, if an interface
+  extends other interfaces. Version 1.0 incorrectly included a 
+  <extends class="java.lang.Object"/>-tag into each interface, and then added
+  extended interfaces via <implements interface"..."/>-tags.
+  To distinguish between extending classes and extending interfaces, the DTD 
+  has slightly been changed, allowing also an 'interface'-attibute in
+  <extends>-tags.
+
+- The XJava-output now contains a version-attribute in the root-tag:
+  <xjava version="1.1">
+
+- Solved bug #000522: loading options from a file via -properties not possible
+  Options can now be suppplied via a configuration file, specified via option
+  '-properties'. This feature has already been stated to be available in the
+  documentation of version 1.0, but was not sufficiently implemented.
+  The properties-file contains one key/value-pair on each line. Possible key
+  names are the same as command-line-options (except for option '-gui', which
+  cannot be specified via the configuration file.).
+  
+- If an error occurs, no longer the full help message gets displayed, only the
+  error message plus a hint for using the -help switch.
+  
+- Some bugs in the Javadoc-sub-parser have been fixed. The message
+  "... warning: could not parse javadoc comment ..." should occur on actually
+  invalid comments only.
+
+- In cases when Javadoc parsing fails, the warning message output on the 
+  console now names the class or member at which the parsing error occurred.
+
+- New options "-test" suppresses any output after parsing.
+
+- New option "-code.braces.linebreak" (shortcut -b) allows choosing between a
+  code formatting style that outputs a line-break before the first starting
+  curly brace ( '{' ) of a method (if set to true), or output it at the end of
+  the method's declaring line (if set to false). Default is false.
+
+- Additional option shortcuts:
+  -c for -code.clean
+  -q for -code.qualify
+  -f for -code.format
+  -i for -code.indent.spaces
+
+- New option "-code.qualify.auto" for allowing to auto-choose full 
+  qualification if an unqualified class-name would not be qualifyable. This
+  case should only occur if the original source also used full qualification
+  without import, so using this option should usually preserve the original.
+  The default is 'true'. If set to false, a warning message is output if
+  BeautyJ generates an unqualified class-name although it assumes that this
+  would not be qualifyable by a Java-compiler.
+  
+- The parser-grammar has been extended to accept dummy-semicolons after member
+  declarations, which is not part of the original Java specification, but is
+  accepted by most Java compilers.
+
+- The parser-grammar has been extended to support JDK 1.4's 'assert' keyword.
+
+- More verbose output: parsing passes 1 and 2 are individually output if 
+  option '-verbose' is set.
+
+- The make-process has changed at several points. See make/make.xml.
+
+- New option '-code.preserve.fields.order' to preserve the order of field
+  declarations as they are given in the orignal source file. In some cases
+  this might be necessary to avoid illegal forward references when compiling
+  the beautified sources.
+
+- Java's array-declaration syntax is now fully supported, field declarations
+  like 'int[][] a, b[], c;'  or 'public byte toBytes() [] { ... }' are now
+  correctly parsed.
+  
+- The parser now distinguishes between static class-initializers and instance
+  initializers. It is also capable of handling multiple initializer
+  declarations per class.
+
+- BeautyJ 1.1 has been fully tested will the original J2SDK 1.4.2 source codes
+  supplied with the Linux-distribution of the J2SDK from Sun Microsystems.
+  See file make/test-jdk1_4_2-sources.sh.
+
+
+Known bugs:
+
+- Line indentation in Javadoc-comments is not preserved. All lines will start
+  at the left-most column, no matter what their original indentation is (this
+  may affect those Javadoc-comments that e.g. contain source code examples).
+- The auto-gui mode (using option '-gui') is an implicit feature of the 
+  underlying framework and is highly experimental.
+
+
+------------------------------------------------------------------------------
+Initial release 1.0, 2002-10-27.
+------------------------------------------------------------------------------

@@ -1,0 +1,167 @@
+  /*** added by Jens *********************************************************/
+
+  private final static Node[] EMPTY=new Node[0];
+  
+  protected String value;
+  protected Token[] tokenRange=new Token[2];
+  protected TextImage textImage;
+  protected String source;
+
+  public int getId()
+  {
+    return id;
+  }
+  
+  /**
+   * Get first child with id.
+   */
+  public Node getChild(int id)
+  {
+    if (children!=null)
+      {
+      for (int i=0;i<children.length;i++)
+      {
+        if (children[i].getId()==id)
+        {
+          return children[i];
+        }
+      }
+    }
+    return null;
+  }
+  
+  public boolean hasChild(int id)
+  {
+    return (getChild(id)!=null);
+  }
+  
+  public Node[] getChildren(int id)
+  {
+    if (children!=null)
+    {
+      java.util.Vector v=new java.util.Vector(5);
+      for (int i=0;i<children.length;i++)
+      {
+        if (children[i].getId()==id)
+        {
+          v.addElement(children[i]);
+        }
+      }
+      Node[] n=new Node[v.size()];
+      v.copyInto(n);
+      return n;
+    }
+    else
+    {
+      return EMPTY;
+    }
+  }
+  
+  public Node[] getAllChildren()
+  {
+    if (children!=null)
+    {
+      return children;
+    }
+    else
+    {
+      return EMPTY;
+    }
+  }
+  
+  public String getValue()
+  {
+    return value;
+  }
+  
+  public void setValue(String v)
+  {
+    value=v;
+  }
+  
+  public String getName()
+  {
+    Node node=getChild(ParserTreeConstants.JJT_NAME);
+    if (node!=null)
+    {
+      return node.retrieveName();
+    }
+    else
+    {
+      return null;
+    }
+  }
+  
+  public String retrieveName()
+  {
+    String name;
+    int num=jjtGetNumChildren();
+    if (num==1) // optimization: single child node _IDENTIFIER
+    {
+      Node n=jjtGetChild(0);
+      name=n.getValue();      
+    }
+    else // general case: name identifiers joined by dots
+    {
+      StringBuffer sb=new StringBuffer();
+      for (int i=0;i<num;i+=2)
+      {
+        //Node child=node.jjtGetChild(i).getValue();
+        String n=jjtGetChild(i).getValue();
+        sb.append(n);
+        if (i+1<num)
+        {
+          // next one must be _DOT
+          sb.append(".");
+        }
+      }
+      name=sb.toString();
+    }
+    return name;
+  }
+  
+  public void setStartToken(Token t)
+  {
+    tokenRange[0]=t;
+  }  
+  
+  public void setEndToken(Token t)
+  {
+    tokenRange[1]=t;
+  }
+  
+  public Token getStartToken()
+  {
+    return tokenRange[0];
+  }
+  
+  public Token getEndToken()
+  {
+    return tokenRange[1];
+  }  
+  
+  public void setTextImage(TextImage ti)
+  {
+    textImage=ti;
+  }
+  
+  public TextImage getTextImage()
+  {
+    return textImage;
+  }
+  
+  public String getSource()
+  {
+    return source;
+  }
+  
+  public void setSource(String source)
+  {
+    this.source=source;
+  }
+  
+  public int[] getSourcePosition()
+  {
+    int[] pos={getStartToken().beginLine,getStartToken().beginColumn};
+    return pos;
+  }

@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.SourceObjectDeclared
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -28,13 +28,14 @@ import java.util.*;
  * Class SourceObjectDeclared.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public abstract class SourceObjectDeclared extends SourceObject {
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      */
     public Class declaringClass;
@@ -46,7 +47,7 @@ public abstract class SourceObjectDeclared extends SourceObject {
     /**
      * The modifier.
      */
-    protected int modifier=0;
+    protected int modifier = 0;
 
     /**
      * The source.
@@ -62,6 +63,7 @@ public abstract class SourceObjectDeclared extends SourceObject {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the modifier.
      */
@@ -120,13 +122,13 @@ public abstract class SourceObjectDeclared extends SourceObject {
     public void initFromXML(Element element) throws IOException {
         // to be extended (not overwritten) by subclasses
         super.initFromXML(element);
-        
+
         // get modifier 'final'
         this.modifier=0;
         if (XMLToolbox.isYesAttribute(element,"final")) {
             this.modifier|=java.lang.reflect.Modifier.FINAL;
         }
-        
+
         // get javadoc comment
         Element doc=XMLToolbox.getChild(element,"documentation");
         if (doc!=null) {
@@ -137,7 +139,7 @@ public abstract class SourceObjectDeclared extends SourceObject {
         else {
             myDocumentation=null;
         }
-        
+
         if (this instanceof Typed) {
             Typed typed=(Typed)this;
             Type t=null;
@@ -163,17 +165,20 @@ public abstract class SourceObjectDeclared extends SourceObject {
      */
     public Element buildXML(Document d) {
         Element e=super.buildXML(d);
-        
+
         if (java.lang.reflect.Modifier.isFinal(modifier)) {
             e.setAttribute("final","yes");
         }
-        
+        if (java.lang.reflect.Modifier.isStrict(modifier)) {
+            e.setAttribute("strictfp","yes");
+        }
+
         // javadoc
         Documentation doc=getDocumentation();
         if (doc!=null) {
             e.appendChild(doc.buildXML(d));
         }
-        
+
         return e;
     }
 
@@ -239,10 +244,10 @@ public abstract class SourceObjectDeclared extends SourceObject {
      */
     void initFromAST(Node rootnode) {
         super.initFromAST(rootnode);
-        
+
         source=rootnode.getSource();
         sourcePosition=rootnode.getSourcePosition();
-        
+
         // get modifier 'final'
         this.modifier=0;
         Node mod=rootnode.getChild(JJT_MODIFIER);
@@ -250,8 +255,11 @@ public abstract class SourceObjectDeclared extends SourceObject {
             if (mod.hasChild(JJT_FINAL)) {
                 this.modifier|=java.lang.reflect.Modifier.FINAL;
             }
+            if (mod.hasChild(JJT_STRICTFP)) {
+                this.modifier|=java.lang.reflect.Modifier.STRICT;
+            }
         }
-        
+
         // get javadoc comment
         Token t=rootnode.getStartToken();
         t=t.specialToken;
@@ -260,6 +268,8 @@ public abstract class SourceObjectDeclared extends SourceObject {
             if (doc.startsWith("/**")) // could be an 'ordinary'-comment (then ignore)
             {
                 DocumentationDeclared d=new DocumentationDeclared();
+                d.setSourceObjectDeclared(this);
+                doc = doc.replace('\r', ' '); // workaround: avoid problems with crlf-linefeeds
                 d.setRaw(doc);
                 myDocumentation=d;
             }

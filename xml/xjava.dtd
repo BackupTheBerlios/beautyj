@@ -12,7 +12,7 @@
     ...
     </xjava>
 
-    Version 1.0
+    Version 1.1
 
     Copyright (c) Jens Gulden, www.jensgulden.de.
 
@@ -59,7 +59,8 @@
 
             <!ELEMENT extends EMPTY>
             <!ATTLIST extends
-                class CDATA #REQUIRED
+                class CDATA #IMPLIED
+                interface CDATA #IMPLIED
               >
 
             <!ELEMENT implements EMPTY>

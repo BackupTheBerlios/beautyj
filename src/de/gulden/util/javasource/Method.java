@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Method
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -28,13 +28,14 @@ import java.util.*;
  * Class Method.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Method extends MemberExecutable implements Typed {
 
     // ------------------------------------------------------------------------
     // --- field                                                            ---
     // ------------------------------------------------------------------------
+
     /**
      * The type.
      */
@@ -44,10 +45,11 @@ public class Method extends MemberExecutable implements Typed {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Method.
      */
-    Method(Class c) {
+    public Method(Class c) {
         super(c);
     }
 
@@ -55,6 +57,7 @@ public class Method extends MemberExecutable implements Typed {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the type.
      */
@@ -78,7 +81,7 @@ public class Method extends MemberExecutable implements Typed {
     public void initFromXML(Element element) throws IOException {
         // to be extended (not overwritten) by subclasses
         super.initFromXML(element);
-        
+
         // type
         Element ty=XMLToolbox.getChildRequired(element,"type");
         type=new Type(this);

@@ -67,14 +67,29 @@ public class TextImage
     int colEnd;
     if (startLine<endLine)
     {
-      colEnd=l.length-1;
+        colEnd= l.length-1;
+        //colEnd= colStart + l.length-1;
     }
     else // startLine==endLine
     {
       colEnd=endColumn;
     }
     int len=colEnd-colStart+1;
+    //if (len < 0) {
+    //	len = 0;
+    //}
+/*if ((len>=buf.length)||(colStart+len>=l.data.length)){
+	// TODO remove
+	System.out.println("####");
+}*/
+//try {
+    
     System.arraycopy(l.data,colStart,buf,0,len);
+    
+//} catch (Throwable th) {
+//	System.out.println("####");
+//}
+    
     bufsize=len;
     
     // middle lines

@@ -94,24 +94,9 @@ SKIP :
 TOKEN :
 {
   < EOL: "\n" >
-| < STAR: "*" >
-| < SLASH: "/" >
 | < DOCSTART: "/*" ("*")+ >
 | < DOCEND: "*/" >
-
-| < WORD: ~["@","*","/"," ","\t","\r","\n"] ( ~[" ","\t","\r","\n"] )* >
-
-/*
-| < WORD: ( <LETTER> )+ >
-| < #LETTER:
-      [
-        "a"-"z",
-        "A"-"Z",
-        ".",",",";",":","!","?","-","_","+","=","#","'","<",">","\"",
-        "0"-"9"
-      ]
-  >
-*/
+| < STAR: "*" >
 
 | < TAG_AUTHOR: "@author" >
 | < TAG_DEPRECATED: "@deprecated" >
@@ -122,7 +107,23 @@ TOKEN :
 | < TAG_SINCE: "@since" >
 | < TAG_THROWS: "@throws" >
 | < TAG_VERSION: "@version" >
-| < TAG_ID: "@id" > // this is used in the original java 1.1.8 sources and included here for compatibility
+| < TAG_ID: "@id" > // this had once been used in the original java 1.1.8 sources and is included here for compatibility
+
+// This used to crash in version 1.0 if the comment e.g. contained "// ..." parts:
+//| < WORD: ~["@","*","/"," ","\t","\r","\n"] ( ~[" ","\t","\r","\n"] )* >
+
+| < WORD: ( ~[" ","\t","\r","\n"] )* > 
+// (Leads to a warning that WORD can be matched by an empty string, but this does not seem to do harm.)
+// Small problem: line-indentation gets removed when parsing, this can be relevant in rare cases when
+// code-blocks are parts of the Javadoc-comment.
+// This also does not allow single stars (*) inside comments, which is prevented by a workaround,
+// making sure that the JavadocParser never sees single stars in the comment.
+
+// does not work:
+//| < WORD: ( ~["\r","\n"] )* > 
+// Using WORD like this means actually treating a whole line as one word. This is useful to preserve indentation
+// in comments, e.g. when code-blocks are part of a Javadoc-comment.
+
 }
 
 
@@ -212,7 +213,7 @@ void Word() :
   Token t;
 }
 {
-  t =  <WORD> { jjtThis.setValue(t.toString()); }
+  t =  <WORD> { jjtThis.setValue(t.toString()); } // (allow star as part of line-conent, too)
 }
 
 

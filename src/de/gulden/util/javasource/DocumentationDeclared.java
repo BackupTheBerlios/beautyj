@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.DocumentationDeclared
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -28,22 +28,39 @@ import java.util.*;
  * Class DocumentationDeclared.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class DocumentationDeclared extends Documentation {
 
     // ------------------------------------------------------------------------
-    // --- field                                                            ---
+    // --- final static field                                               ---
     // ------------------------------------------------------------------------
+
+    /**
+     * Constant workaroundReplaceSingleStar.
+     */
+    private static final String workaroundReplaceSingleStar = "###SINGLE-STAR###";
+
+
+    // ------------------------------------------------------------------------
+    // --- fields                                                           ---
+    // ------------------------------------------------------------------------
+
     /**
      * The my documentation tagged.
      */
     public Vector myDocumentationTagged;
 
+    /**
+     * The my source object declared.
+     */
+    public SourceObjectDeclared mySourceObjectDeclared;
+
 
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of DocumentationDeclared.
      */
@@ -55,6 +72,7 @@ public class DocumentationDeclared extends Documentation {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the tags.
      */
@@ -95,49 +113,83 @@ public class DocumentationDeclared extends Documentation {
     }
 
     /**
-     * Removes a all tags.
+     * Removes all tags.
      */
     public void removeAllTags() {
         myDocumentationTagged.removeAllElements();
     }
 
     /**
+     * Returns the source object declared.
+     */
+    public SourceObjectDeclared getSourceObjectDeclared() {
+        return mySourceObjectDeclared;
+    }
+
+    /**
+     * Sets the source object declared.
+     */
+    public void setSourceObjectDeclared(SourceObjectDeclared sourceObjectDeclared) {
+        this.mySourceObjectDeclared = sourceObjectDeclared;
+    }
+
+    /**
      * Extends Documentation.setRaw(String raw).
      */
     public void setRaw(String raw) {
-        super.setRaw(raw);
-        try {
-            Node docnode=JavadocParser.parse(raw);
-            text=getTextFromNode(docnode.getChild(JavadocParserTreeConstants.JJTDESCRIPTION)).trim();
-            Node[] tags=docnode.getChildren(JavadocParserTreeConstants.JJTTAG);
-            for (int i=0;i<tags.length;i++) {
-                String tag;
-                String tagItem;
-                String tagText;
-                tag=tags[i].getValue();
-                Node itemNode=tags[i].getChild(JavadocParserTreeConstants.JJTTAGITEM);
-                if (itemNode!=null) {
-                    tagItem=itemNode.getChild(JavadocParserTreeConstants.JJTWORD).getValue();
+                super.setRaw(raw);
+                try {
+                	raw = raw.trim();
+                	// workaround 1: a Javadoc-comment might end with ***..**/ (multiple stars). Remove all additional stars so that comments ends cleanly with "*/" (otherwise stars will be seen as part of the comment text, which is very most likely not intended in such case)
+                	while (raw.charAt(raw.length()-3)=='*') {
+                		raw = raw.substring(0, raw.length()-3) + "*/";
+                	}
+                	// workaround 2: Javadoc-parser fails if no blank before ending */, so insert if needed (will not distort parse results, will be trimmed anyway)
+                	if (raw.charAt(raw.length()-3)!=' ') {
+                		raw = raw.substring(0, raw.length()-2) +" */";
+                	}
+                	// workaround 3: avoid single " * " occurrences in Javadoc, replace now and replace-back later
+                	raw = workaroundAvoidSingleStar(raw);
+                	// parse
+                    Node docnode=JavadocParser.parse(raw);
+                    this.text = getTextFromNode(docnode.getChild(JavadocParserTreeConstants.JJTDESCRIPTION)).trim();
+                    Node[] tags=docnode.getChildren(JavadocParserTreeConstants.JJTTAG);
+                    for (int i=0;i<tags.length;i++) {
+                        String tag;
+                        String tagItem;
+                        String tagText;
+                        tag=tags[i].getValue();
+                        Node itemNode=tags[i].getChild(JavadocParserTreeConstants.JJTTAGITEM);
+                        if (itemNode!=null) {
+                            tagItem=itemNode.getChild(JavadocParserTreeConstants.JJTWORD).getValue();
+                        }
+                        else {
+                            tagItem=null;
+                        }
+                        tagText=getTextFromNode(tags[i]).trim();
+                        DocumentationTagged dt=new DocumentationTagged();
+                        dt.setTag(tag);
+                        dt.setItem(tagItem);
+                        dt.setText(tagText);
+                        this.addTag(dt);
+                    }
+                    return;
                 }
-                else {
-                    tagItem=null;
+                catch (TokenMgrError te) {
+                	// fallthrough
                 }
-                tagText=getTextFromNode(tags[i]).trim();
-                DocumentationTagged dt=new DocumentationTagged();
-                dt.setTag(tag);
-                dt.setItem(tagItem);
-                dt.setText(tagText);
-                this.addTag(dt);
-            }
-        }
-        catch (TokenMgrError te) {
-            text="... warning: could not parse javadoc comment ...";
-            System.err.println("warning: could not parse javadoc comment, warning message inserted instead");
-        }
-        catch (ParseException pe) {
-            text="... warning: could not parse javadoc comment ...";
-            System.err.println("warning: could not parse javadoc comment, warning message inserted instead");
-        }
+                catch (ParseException pe) {
+                	// fallthrough
+                }
+                text="... warning: could not parse javadoc comment ...";
+                String msg = "warning: could not parse javadoc comment, warning message inserted instead";
+                SourceObjectDeclared sourceObjectDeclared = getSourceObjectDeclared();
+                if (sourceObjectDeclared != null) {
+                	Class declaringClass = sourceObjectDeclared.getDeclaringClass();
+                	String n = sourceObjectDeclared.getName();
+                	msg += " ["+ ( declaringClass!=null ? declaringClass.getName()+(n!=null?".":"") : "") + (n!=null?n:"") + "]";
+                }
+                System.err.println(msg);
     }
 
     /**
@@ -182,18 +234,47 @@ public class DocumentationDeclared extends Documentation {
 
 
     // ------------------------------------------------------------------------
-    // --- static method                                                    ---
+    // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
+    protected static String workaroundAvoidSingleStar(String s) {
+        int pos = s.indexOf('*');
+        while (pos != -1) {
+        	if (s.charAt(pos+1)!='/') { // not the very end of the comment
+        		int linestart = s.lastIndexOf(nl, pos) + 1; // will result in 0 for 'not found' which is wanted
+        		String beforeStar = s.substring(linestart, pos);
+        		//if (containsText(beforeStar)) { // found a star to replace
+        		if ((beforeStar.indexOf('*')!=-1) && (!beforeStar.equals("/*"))) {
+        			s = s.substring(0, pos) + workaroundReplaceSingleStar + s.substring(pos+1);
+        			return workaroundAvoidSingleStar(s);
+        		}
+           		pos = s.indexOf('*', pos+1);
+        	} else {
+        		pos = -1;
+        	}
+        }
+        return s;
+    }
+
+    protected static String workaroundRestoreSingleStar(String s) {
+        int pos = s.indexOf(workaroundReplaceSingleStar);
+        if (pos != -1) {
+        	return s.substring(0, pos) + "*" + workaroundRestoreSingleStar(s.substring(pos+workaroundReplaceSingleStar.length()));
+        } else {
+        return s;
+        }
+    }
+
     /**
      * Returns the text from node.
      */
-    static String getTextFromNode(Node n) {
+    private static String getTextFromNode(Node n) {
         StringBuffer sb=new StringBuffer();
         Node[] lines=n.getChildren(JavadocParserTreeConstants.JJTLINE);
         for (int i=0;i<lines.length;i++) {
             Node[] words=lines[i].getChildren(JavadocParserTreeConstants.JJTWORD);
             for (int j=0;j<words.length;j++) {
-                sb.append(words[j].getValue());
+                sb.append( workaroundRestoreSingleStar( words[j].getValue() ) );
                 if (j<words.length-1) {
                     sb.append(" ");
                 }

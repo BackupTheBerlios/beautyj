@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Code
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -19,6 +19,7 @@ package de.gulden.util.javasource;
 import de.gulden.util.javasource.jjt.Node;
 import de.gulden.util.javasource.jjt.*;
 import de.gulden.util.xml.XMLToolbox;
+import de.gulden.util.Toolbox;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import java.io.*;
@@ -28,13 +29,14 @@ import java.util.*;
  * Represents code in a method/constructor body, and in a static class initializer.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Code extends Implementation {
 
     // ------------------------------------------------------------------------
     // --- field                                                            ---
     // ------------------------------------------------------------------------
+
     /**
      * The raw code string.
      */
@@ -44,6 +46,7 @@ public class Code extends Implementation {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Code.
      */
@@ -55,6 +58,7 @@ public class Code extends Implementation {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the raw code string.
      */
@@ -124,23 +128,36 @@ public class Code extends Implementation {
         raw=rootnode.getTextImage().getRange(t.beginLine,t.beginColumn,endT.endLine,endT.endColumn);
         raw=raw.trim();
         raw=raw.substring(1,raw.length()-1); // remove { } or = ;
-        raw=raw.trim();
+        // remove left part if only blanks before first \n:
+        int npos = raw.indexOf('\n');
+        if (npos != -1) {
+        	String left = raw.substring(0, npos);
+        	if (left.trim().length()==0) {
+        		raw = raw.substring(npos+1);
+        	}
+        }
+        if (raw.indexOf("...fields")!=-1) {
+        System.out.println("AAA");
+        }
+        raw = unindent(raw);
+        raw = SourceParser.workaroundRestoreUnicodeSingleChar(raw); // @see SourceParser#parsePass1()
     }
 
 
     // ------------------------------------------------------------------------
     // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
     static Token findCodeEnd(Token t) {
-                int cnt=1;
+        int cnt=1;
         while (cnt>0) {
-            t=t.next;
-            switch (t.kind) {
-                case ParserConstants.LBRACE: cnt++;
-                break;
-                case ParserConstants.RBRACE: cnt--;
-                break;
-            }
+        t=t.next;
+        switch (t.kind) {
+        case ParserConstants.LBRACE: cnt++;
+        break;
+        case ParserConstants.RBRACE: cnt--;
+        break;
+        }
         }
         return t;
     }
@@ -153,6 +170,64 @@ public class Code extends Implementation {
             }
         }
         return t;
+    }
+
+    /**
+     * Creates an unindented representation of a code block by shifting all lines to the left so that
+     * the first line will start at column 0. All other lines are shifted relative to the shift of the first line.
+     * The specified code block is expected to be passed without enclosing braces.
+     *  
+     * @return  unindented code
+     */
+    static String unindent(String code) {
+        List l = Toolbox.getLines(code);
+        StringBuffer sb = new StringBuffer();
+        String nl = System.getProperty("line.separator");
+        int shift = -1;
+           for (ListIterator it = l.listIterator(); it.hasNext(); ) {
+           	String line = (String)it.next();
+           	if (line.trim().length()==0) { // blank line
+           		if ( it.hasNext() ) { // skip last line if empty, it is just the remaining part until '}'
+           			sb.append( nl );
+           		}
+           	} else {
+           		String newLine;
+           		if (shift == -1) { // first line
+           			newLine = Toolbox.trimLeft(line);
+           			shift = line.length() - newLine.length();
+           		} else {
+           			if (line.length() > shift) {
+           				String cutoff = line.substring(0, shift);
+           				if (cutoff.trim().length()==0) { // no content would be cut off by shifting: normal shift
+           					newLine = line.substring(shift);
+           				} else {
+           					newLine = Toolbox.trimLeft(line); // otherwise just trim all left whitespace, original relative shift to first line will be lost
+           				}
+           			} else {
+        				newLine = Toolbox.trimLeft(line); // otherwise just trim all left whitespace, original relative shift to first line will be lost
+           			}
+           		}
+           		sb.append(Toolbox.trimRight(newLine));
+           		if (it.hasNext() /*&& (
+           		     ( !
+           		     		( ((String)it.next()).trim().length()==0 ) && ( !it.hasNext() ) // append new line only if not last line or line before an empty last line
+         )
+         & ( dummy(it.previous()) )
+        )  */) {
+           			sb.append(nl);
+           		}
+           	}
+           }
+           String s = sb.toString();
+           if (s.endsWith(nl)) { // truncate very last line-break, if there (very last blank line is rest until '}' and will be auto-generated anyway)
+           	s = s.substring(0, s.length()-nl.length());
+           }
+           return s;
+    }
+
+    private static boolean dummy(Object o) {
+        // (allows to call it.previous()) from within boolean expression
+        return true;
     }
 
 } // end Code

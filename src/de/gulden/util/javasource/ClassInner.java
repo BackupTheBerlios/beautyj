@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.ClassInner
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -24,13 +24,14 @@ import java.util.*;
  * Represents an inner class declaration.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class ClassInner extends Class {
 
     // ------------------------------------------------------------------------
     // --- field                                                            ---
     // ------------------------------------------------------------------------
+
     /**
      */
     public Vector myClass;
@@ -39,6 +40,7 @@ public class ClassInner extends Class {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of ClassInner.
      */
@@ -50,6 +52,7 @@ public class ClassInner extends Class {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Sets the class within which this SourceObjectDeclared is declared.
      */
@@ -94,7 +97,11 @@ public class ClassInner extends Class {
      * @return  The fully qualified class identifier.
      */
     protected String qualifyInternal(String name) {
-        return getDeclaringClass().qualifyInternal(name); // will also find inner classes of this
+        String q = super.qualifyInternal(name);
+        if (q==null) {
+        	q = getDeclaringClass().qualifyInternal(name); // will also find inner classes of this
+        }
+           return q;
     }
 
     protected void registerAtPackage(Package p) {

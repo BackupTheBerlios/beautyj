@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Package
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -27,13 +27,14 @@ import java.util.*;
  * Represents a Java package.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Package extends SourceObject implements PackageMember {
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      * The my class.
      */
@@ -53,11 +54,12 @@ public class Package extends SourceObject implements PackageMember {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Package.
      */
     public Package() {
-                myClass=new Vector();
+        myClass=new Vector();
         children=new Vector();
         name=""; // initially treat as default (base-)package
     }
@@ -66,6 +68,7 @@ public class Package extends SourceObject implements PackageMember {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Sets the name.
      */
@@ -81,24 +84,56 @@ public class Package extends SourceObject implements PackageMember {
     /**
      * Returns a Class object that carries the qualifiedName, if the class
      * is contained in this package, or if it is contained in any sub-package
-     * of this package.
+     * of this package, or is an inner class of any class inside this package.
      *  
      * @return  The Class representation, or <code>null</code> if not found.
      */
     public Class findClass(String qualifiedName) {
-        NamedIterator it=getClasses();
-        Class c=(Class)it.find(qualifiedName);
-        if (c==null) // not found in this package
-        {
-            // find in inner package
-            NamedIterator pit=getInnerPackages();
-            while ((c==null)&&(pit.hasMore())) {
-                Package p=(Package)pit.next();
-                c=p.findClass(qualifiedName);
-            }
-        }
-        // c==null if not found
-        return c;
+            	String selfName = this.getName();
+            	boolean base = (selfName.equals(""));
+            	String q;
+            	if (!base) {
+            		if (qualifiedName.startsWith(selfName+".")) {
+            			q = qualifiedName.substring(selfName.length()+1);
+            		} else {
+            			return null;
+            		}
+            	} else {
+            		q = qualifiedName;
+            	}
+            	// q now is stripped by self name (like 'de.gulden.application.beautyj.BeautyJ' 'application.beautyj.BeautyJ'  if this is 'de.gulden')
+            	String firstPart;
+            	int dot = q.indexOf('.');
+            	if (dot!=-1) {
+            		firstPart = q.substring(0, dot);
+            		String find;
+            		if (!base) {
+            			find = selfName + "." + firstPart;
+            		} else {
+            			find = firstPart;
+            		}
+            		// find could be a subpackage of this, or an outer class if qualifiedName is an inner class
+            		// inner package?
+                    NamedIterator it=getInnerPackages();
+                    Package p=(Package)it.find(find);
+                    if (p!=null) {
+                    	return p.findClass(qualifiedName); // recursion
+                    }
+            		// must be looking for an inner class of a class in this package now
+                    it=getClasses();
+                    Class c=(Class)it.find(find);
+                    if (c != null) {
+                    	ClassInner ci = c.findInnerClass(qualifiedName);
+                    	return ci;
+                    } else {
+                    	return null;
+                    }
+            	} else {
+            		// can only be a class in this package
+                    NamedIterator it=getClasses();
+                    Class c=(Class)it.find(qualifiedName);
+                    return c;
+            	}
     }
 
     /**
@@ -109,22 +144,43 @@ public class Package extends SourceObject implements PackageMember {
      * @return  The Package representation, or <code>null</code> if not found.
      */
     public Package findPackage(String qualifiedName) {
-        if (qualifiedName.equals(getName())) {
-            return this;
-        }
-        NamedIterator it=getInnerPackages();
-        Package p=(Package)it.find(qualifiedName);
-        if (p==null) // not found in this package
-        {
-            // find in inner package
-            NamedIterator pit=getInnerPackages();
-            while ((p==null)&&(pit.hasMore())) {
-                Package pp=(Package)pit.next();
-                p=pp.findPackage(qualifiedName);
-            }
-        }
-        // p==null if not found
-        return p;
+            	String selfName = this.getName();
+            	boolean base = (selfName.equals(""));
+            	if (selfName.equals(qualifiedName)) {
+            		return this;
+            	}
+            	String q;
+            	if (!base) {
+            		if (qualifiedName.startsWith(selfName+".")) {
+            			q = qualifiedName.substring(selfName.length()+1);
+            		} else {
+            			return null;
+            		}
+            	} else {
+            		q = qualifiedName;
+            	}
+            	// q now is stripped by self name (like 'de.gulden.application.beautyj' 'application.beautyj'  if this is 'de.gulden')
+            	String find;
+            	String firstPart;
+            	int dot = q.indexOf('.');
+            	if (dot!=-1) {
+            		firstPart = q.substring(0, dot);
+            		if (!base) {
+                		find = selfName + "." + firstPart;
+            		} else {
+            			find = firstPart;
+            		}
+            		// find can only be a subpackage of this, otherwise not found
+            	} else {
+            		// can only be a sub-package of this package
+            		find = qualifiedName;
+            	}
+                NamedIterator it=getInnerPackages();
+                Package p=(Package)it.find(find);
+                if ((p!=null)&&(find != qualifiedName)) { // wasn't the final package to find
+                	p = p.findPackage(qualifiedName); // recursion
+                }
+                return p;
     }
 
     /**
@@ -250,12 +306,12 @@ public class Package extends SourceObject implements PackageMember {
         } else {
             throw new IOException("illegal tag name "+tagname+" expected 'xjava' or 'package'");
         }
-        
+
         initEmptyFathers();
-        
+
         // classes / interfaces
         myClass.removeAllElements();
-        
+
         // classes
         NodeList nl=XMLToolbox.getChildren(element,"class");
         for (int i=0;i<nl.getLength();i++) {
@@ -263,7 +319,7 @@ public class Package extends SourceObject implements PackageMember {
             cl.setPackage(this);
             cl.initFromXML((Element)nl.item(i));
         }
-        
+
         // interfaces
         nl=XMLToolbox.getChildren(element,"interface");
         for (int i=0;i<nl.getLength();i++) {
@@ -272,7 +328,7 @@ public class Package extends SourceObject implements PackageMember {
             cl.setInterface(true);
             cl.initFromXML((Element)nl.item(i));
         }
-        
+
         // inner packages
         children.removeAllElements();
         nl=XMLToolbox.getChildren(element,"package");
@@ -333,7 +389,7 @@ public class Package extends SourceObject implements PackageMember {
      * Add a package to this package. (Without caring about the package's own reference to <code>this</code>.)
      */
     void registerPackage(Package p) {
-                children.addElement(p);
+        children.addElement(p);
     }
 
     /**
@@ -349,6 +405,11 @@ public class Package extends SourceObject implements PackageMember {
     // ------------------------------------------------------------------------
     // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
+    public static boolean isSourcePackage(Package base, String name) {
+        return (base.findPackage(name) != null);
+    }
+
     /**
      * Removes the last part of the package name from the end of the
      * qualified name string.

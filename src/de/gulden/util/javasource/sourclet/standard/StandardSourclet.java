@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.sourclet.standard.StandardSourclet
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -21,7 +21,7 @@ import de.gulden.util.javasource.Package;
 import de.gulden.util.javasource.Class;
 import de.gulden.util.javasource.Exception;
 import de.gulden.util.javasource.*;
-import de.gulden.framework.amoda.model.option.Options;
+import de.gulden.util.Toolbox;
 import java.io.*;
 import java.util.*;
 import java.text.*;
@@ -32,44 +32,47 @@ import java.lang.reflect.Modifier;
  * See documentation of Beauty and the Java Sourclet API.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
-public class StandardSourclet extends AbstractSourclet implements StandardSourcletOptionNames {
+public class StandardSourclet extends AbstractSourclet {
 
     // ------------------------------------------------------------------------
     // --- static fields                                                    ---
     // ------------------------------------------------------------------------
+
     /**
      *  
      * @see  #getSpecialPrefix
      * @see  #hasSpecialPrefix
      */
-    protected static String[] specialPrefixes={"get","set","add","remove","is","init","parse","create","build"};
+    protected static String[] specialPrefixes = {"get","set","add","remove","is","init","parse","create","build"};
 
     /**
      * These defaults are also named for option doc.exception.texts in the configuration XML File.
      * But if they are overwritten by the user, they still get used, so keep here as constant and always add to user's texts.
      */
-    protected static String defaultExceptionTexts="IOException=if an i/o error occurs,SQLException=if a database error occurs,SAXException=if an XML parser error occurs,NumberFormatException=if the string cannot be parsed as a number";
+    protected static String defaultExceptionTexts = "IOException=if an i/o error occurs,SQLException=if a database error occurs,SAXException=if an XML parser error occurs,NumberFormatException=if the string cannot be parsed as a number";
 
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      * The exception texts.
      */
-    protected Properties exceptionTexts=null;
+    protected Properties exceptionTexts = null;
 
     /**
      * The headerfile text.
      */
-    protected String headerfileText=null;
+    protected String headerfileText = null;
 
 
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of StandardSourclet.
      */
@@ -81,6 +84,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Outputs the start part of a source object.
      * This is the part which comes before the 'normal' head
@@ -99,16 +103,16 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 } else {
                     String opt;
                     write(out,"/*"+nl);
-                    opt=getOption(OPTION_PROJECT_NAME);
+                    opt=getOption("project.name");
                     if (opt!=null) {
                         write(out," * Project: "+opt+nl);
                     }
                     write(out," * Class:   "+clazz.getName()+nl);
-                    opt=getOption(OPTION_PROJECT_VERSION);
+                    opt=getOption("project.version");
                     if (opt!=null) {
                         write(out," * Version: "+opt+nl);
                     }
-                    opt=getOption(OPTION_PROJECT_DATE);
+                    opt=getOption("project.date");
                     if (opt!=null) {
                         String op=opt.trim();
                         if (op.equalsIgnoreCase("now")||op.equalsIgnoreCase("today")) {
@@ -117,18 +121,18 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                         write(out," *"+nl);
                         write(out," * Date:    "+opt+nl);
                     }
-                    opt=getOption(OPTION_PROJECT_DESCRIPTION);
+                    opt=getOption("project.description");
                     if (opt!=null) {
                         opt=replace(opt,"\\n","\n"); // allow line breaks expressed as "\n"
                         write(out," *"+nl);
                         write(out,startWithStars(opt,""));
                     }
                     write(out," *"+nl);
-                    opt=getOption(OPTION_AUTHOR_NAME);
+                    opt=getOption("author.name");
                     if (opt!=null) {
                         write(out," * Author:  "+opt+nl);
                     }
-                    opt=getOption(OPTION_AUTHOR_EMAIL);
+                    opt=getOption("author.email");
                     if (opt!=null) {
                         write(out," * Email:   "+opt+nl);
                     }
@@ -138,7 +142,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 if (!clazz.getPackage().isBasePackage()) {
                     write(out,"package "+clazz.getPackage().getName()+";"+nl);
                 }
-                
+
                 // imports
                 NamedIterator it=clazz.getImports();
                 if (it.hasMore()) {
@@ -151,24 +155,24 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 write(out,nl);
             }
         }
-        
+
         // fields, methods, constructors, classes
         if ((o instanceof Member)||(o instanceof Class)) {
             String type=getTypeCode(o);
-            
+
             String spaces;
             if (o instanceof Class) {
                 spaces="";
             } else {
                 spaces=indent(1);
             }
-            
+
             DocumentationDeclared doc=(DocumentationDeclared)o.getDocumentation();
             String text=null;
             DocumentationDeclared supDoc=tryGetDocumentationFromSuperclass(o); // inheriting documentation doesn't work properly yet is still undocumented
             if ((doc!=null) // documentation exists
-                &&(doc instanceof DocumentationDeclared)) { 
-                if (!isOption("doc."+type+".description.remove.text")) {
+                &&(doc instanceof DocumentationDeclared)) {
+                if (!hasOption( type+".remove.text", "description")) {
                     text=doc.getText();
                     if (text==null||text.equals("")) {
                         if (supDoc!=null) {
@@ -177,12 +181,12 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                     }
                 }
             } else { // documentation doesn't exist yet, try to find in a superclass
-                if ((supDoc!=null)&&(!isOption("doc."+type+".description.remove.text"))) {
+                if ((supDoc!=null)&&(!hasOption( type+".remove.text", "description"))) {
                     text=supDoc.getText();
-                }                
+                }
             }
             // if it's a dummy, remove if option is set to do so
-            if ((text!=null)&&isDummy(text)&&(isOption("doc."+type+".description.remove.dummy"))) {
+            if ((text!=null)&&isDummy(text)&&(hasOption( type+".remove.dummy", "description"))) {
                 text=null;
             }
 
@@ -190,10 +194,10 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
             if (text==null) {
                 String unqualifiedName=o.getUnqualifiedName();
                 String specialPrefix=getSpecialPrefix(unqualifiedName);
-                if (isOption("doc."+type+".description.create.text")) {
-                    if ((o instanceof Constructor)&&isOption(OPTION_METHOD_DESCRIPTION_CREATE_TEXT)) {
+                if (hasOption( type+".create.text", "description")) {
+                    if ((o instanceof Constructor)&&hasOption("method.create.text", "description")) {
                         text="Creates a new instance of "+unqualifiedName+".";
-                    } else if ((o instanceof Method)&&(specialPrefix!=null)&&isOption(OPTION_METHOD_DESCRIPTION_CREATE_TEXT)) {
+                    } else if ((o instanceof Method)&&(specialPrefix!=null)&&hasOption("method.create.text", "description")) {
                         if (specialPrefix.equals("get")) {
                             text="Returns the "+toWords(unqualifiedName.substring(specialPrefix.length()))+".";
                         } else if (specialPrefix.equals("set")) {
@@ -211,37 +215,37 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                         } else if (specialPrefix.equals("build")) {
                             text="Builds the "+toWords(unqualifiedName.substring(specialPrefix.length()))+".";
                         }
-                    } else if ((o instanceof Field)&&isOption(OPTION_FIELD_DESCRIPTION_CREATE_TEXT)) {
+                    } else if ((o instanceof Field)&&hasOption("field.create.text", "description")) {
                         if (Modifier.isFinal(o.getModifier())) {
                             text="Constant "+o.getUnqualifiedName()+SourceParser.repeat("[]",(((Field)o).getType().getDimension()))+".";
                         } else {
                             text="The "+toWords(o.getUnqualifiedName())+(((Field)o).getType().getDimension()>0?" array":"")+".";
                         }
-                    } else if ((o instanceof Class)&&isOption(OPTION_CLASS_DESCRIPTION_CREATE_TEXT)) {
+                    } else if ((o instanceof Class)&&hasOption("class.create.text", "description")) {
                         text="Class "+o.getUnqualifiedName()+".";
                     }
                 }
                 // if no text found or generated, maybe generate a dummy
-                if ((text==null)&&isOption("doc."+type+".description.create.dummy")) {
+                if ((text==null)&&hasOption( type+".create.dummy", "description")) {
                     if (specialPrefix!=null) {
                         if (specialPrefix.equals("is")) {
                             text="Tests if ...";
-                        } 
+                        }
                     }
                     if (text==null) {
                         text="...";
                     }
                 }
-            }      
-                    
+            }
+
             boolean headDone=false;
-            
+
             if (text!=null) {
                 write(out,spaces+"/**"+nl);
                 headDone=true;
                 write(out,startWithStars(text,spaces));
             }
-            
+
             ByteArrayOutputStream buf=new ByteArrayOutputStream();
             buildTagDocumentation(buf,o,doc,supDoc);
             if (buf.size()>0) {
@@ -266,46 +270,68 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * @throws IOException if an i/o error occurs
      */
     public void buildHeadSource(OutputStream out, SourceObjectDeclared o) throws IOException {
-        boolean fullQualify=isOption(OPTION_CODE_QUALIFY);
-        
+        boolean fullQualify=isOption("code.qualify");
+
         if (o instanceof Member) {
             write(out,indent(1));
         }
-        
+
         String mod=Modifier.toString(o.getModifier());
         if (mod.length()>0) {
             write(out,mod+" ");
         }
-        
-        if (o instanceof Typed) // Method or Field
-        {
+
+        if (o instanceof Typed) { // Method, Field or Parameter
             Typed typed=(Typed)o;
-            String t=typed.getType().getFullTypeName();
-            if (!fullQualify) {
-                t=unqualify(t);
+            String t;
+            if (fullQualify) {
+            	t = typed.getType().getFullTypeName();
+            } else {
+            	t = typed.getType().getFullUnqualifiedTypeName();
+            	String unqualifiedType = typed.getType().getUnqualifiedTypeName();
+            	String qualifiedType = typed.getType().getTypeName();
+            	Class declaringClass;
+            	if ( ! (typed instanceof Parameter)) {
+            		declaringClass = ((SourceObjectDeclared)typed).getDeclaringClass();
+            	} else {
+            		declaringClass = ((Parameter)typed).getMemberExecutable().getDeclaringClass();
+            	}
+            	if (makeSureIsQualifyable(declaringClass, unqualifiedType, qualifiedType).equals(qualifiedType)) {
+                	t = typed.getType().getFullTypeName(); // 'fallback' to fully qualified
+            	}
+            	if (t.indexOf('.')!=-1) {
+                	// Although unqualified, inner classes will be lead by classname-prefix.
+                	// Remove this prefix if it is the current class.
+                	if (declaringClass != null) {
+                		String thisClassname = declaringClass.getUnqualifiedName();
+                		if (t.startsWith(thisClassname+".")) {
+                			t = t.substring(thisClassname.length()+1);
+                		}
+                	}
+            	}
             }
             write(out,t+" ");
         }
-        
+
         if (o instanceof Class) {
             Class clazz=(Class)o;
             write(out,clazz.isInterface()?"interface ":"class ");
         }
-        
+
         // name
         write(out,o.getUnqualifiedName());
-        
+
         if (o instanceof Class) {
             Class clazz=(Class)o;
             String sup=clazz.getSuperclassName();
             if (!sup.equals("java.lang.Object")) {
                 String s=sup;
                 if (!fullQualify) {
-                    s=unqualify(s);
+                    s = unqualifyClassname(clazz, s);
                 }
                 write(out," extends "+s);
             }
-            
+
             // implemented interfaces
             Enumeration en=clazz.getInterfaceNames();
             if (en.hasMoreElements()) {
@@ -317,13 +343,13 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 while (en.hasMoreElements()) {
                     String in=(String)en.nextElement();
                     if (!fullQualify) {
-                        in=unqualify(in);
+                        in = unqualifyClassname(clazz, in);
                     }
                     write(out,in+(en.hasMoreElements()?(", "):""));
                 }
             }
         }
-        
+
         else if (o instanceof MemberExecutable) {
             MemberExecutable mex=(MemberExecutable)o;
             // parameters
@@ -336,7 +362,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 }
             }
             write(out,")");
-            
+
             // exceptions
             NamedIterator it=mex.getExceptions();
             if (it.hasMore()) {
@@ -346,10 +372,11 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                     String exx;
                     if (!fullQualify) {
                         exx=ex.getUnqualifiedName();
+                        exx = makeSureIsQualifyable(mex.getDeclaringClass(), exx, ex.getName());
                     } else {
                         exx=ex.getName();
                     }
-                    
+
                     write(out,exx+(it.hasMore()?", ":""));
                 }
             }
@@ -364,117 +391,192 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * @throws IOException if an i/o error occurs
      */
     public void buildBodySource(OutputStream out, SourceObjectDeclared o) throws IOException {
-        if (o instanceof Class) {
-            Class clazz=(Class)o;
-            NamedIterator it=clazz.getAllMembers();
-            ByteArrayOutputStream buf=new ByteArrayOutputStream();
-            write(out," {"+nl);
-            
-            Vector todo=new Vector();
-            
-            it.reset();
-            todo.removeAllElements();
-            while (it.hasMore()) {
-                Member m=(Member)it.next();
-                if ((m instanceof Field)&&(Modifier.isStatic(m.getModifier()))) {
-                    todo.addElement(m);
-                }
-            }
-            buildSourceAll(out,todo,"static field");
-            
-            it.reset();
-            todo.removeAllElements();
-            while (it.hasMore()) {
-                Member m=(Member)it.next();
-                if ((m instanceof Field)&&(!Modifier.isStatic(m.getModifier()))) {
-                    todo.addElement(m);
-                }
-            }
-            buildSourceAll(out,todo,"field");
-            
-            it.reset();
-            todo.removeAllElements();
-            while (it.hasMore()) {
-                Member m=(Member)it.next();
-                if (m instanceof Constructor) {
-                    todo.addElement(m);
-                }
-            }
-            buildSourceAll(out,todo,"constructor");
-            
-            it.reset();
-            todo.removeAllElements();
-            while (it.hasMore()) {
-                Member m=(Member)it.next();
-                if ((m instanceof Method)&&(!Modifier.isStatic(m.getModifier()))) {
-                    todo.addElement(m);
-                }
-            }
-            buildSourceAll(out,todo,"method");
-            
-            it.reset();
-            todo.removeAllElements();
-            while (it.hasMore()) {
-                Member m=(Member)it.next();
-                if ((m instanceof Method)&&(Modifier.isStatic(m.getModifier()))) {
-                    todo.addElement(m);
-                }
-            }
-            buildSourceAll(out,todo,"static method");
-            
-            
-            // inner classes and interfaces
-            it=clazz.getInnerClasses();
-            if (it.size()>0) {
-                buildHeader(out,'*',(it.size()==1)?"inner class":"inner classes");
-                while (it.hasMore()) {
-                    Class c=(Class)it.next();
-                    ByteArrayOutputStream outInner=new ByteArrayOutputStream();
-                    buildSource(outInner,c);
-                    String shifted=indent(new String(outInner.toByteArray()),1);
-                    write(out,shifted+nl);
-                }
-            }
-            
-            // initializer (must appear after declarations to avoid forward references, so put at the end of the class)
-            if (clazz.getInitializer()!=null) {
-                String code=clazz.getInitializer().getRaw();
-                code=applyCodeFormatting(code);
-                buildHeader(out,'-',"static class initializer");
-                write(out,indent("static  {",1));
-                write(out,code+nl);
-                write(out,indent("}",1)+nl);
-                
-            }
-            
-            write(out,"} // end "+clazz.getUnqualifiedName()+nl);
-        }
-        
+
+        boolean bracesLinebreak = isOption("code.braces.linebreak");
+
+        // --- class
+
+           if (o instanceof Class) {
+               Class clazz=(Class)o;
+               NamedIterator it=clazz.getAllMembers();
+           	if (bracesLinebreak) { // start with curly brace on individual line
+                   write(out, nl + "{");
+                   if ( ! isOption("code.separators")) {
+                   	write(out, nl);
+                   }
+           	} else { // output curly brace at the end of the method's declaration
+           		write(out," {"+nl);
+           	}
+
+               Vector todo=new Vector();
+
+           	if (isOption("code.preserve.fields.order")) {
+
+                   it.reset();
+                   boolean firstField = true;
+                   while (it.hasMore()) {
+                       Member m=(Member)it.next();
+                       if (m instanceof Field) {
+                           todo.addElement(m);
+                           //buildSourceAll(out,todo,(Modifier.isFinal(m.getModifier()) ? "final ":"") + "static field"); // will generate a header for each field, but that doesn't do any harm (called individually for each element to preserve order)
+                       }
+                   }
+
+           		buildHeader(out,'-',"field", "fields", todo.size());
+
+        		Vector singleTodo = new Vector();
+           		for (Enumeration e = todo.elements(); e.hasMoreElements(); ) {
+           			singleTodo.removeAllElements();
+           			singleTodo.addElement( e.nextElement() );
+                       buildSourceAll(out,singleTodo,null); // build single elements
+           		}
+
+           	} else { // normal beautification: order by final-static / static / non-static and public / protected / friendly / private
+
+                   it.reset();
+                   while (it.hasMore()) {
+                       Member m=(Member)it.next();
+                       if ( (m instanceof Field) && Modifier.isStatic(m.getModifier())  && Modifier.isFinal(m.getModifier()) ) {
+                           todo.addElement(m);
+                       }
+                   }
+                   buildSourceAll(out,todo,"final static field");
+
+                   it.reset();
+                   todo.removeAllElements();
+                   while (it.hasMore()) {
+                       Member m=(Member)it.next();
+                       if ( (m instanceof Field) && Modifier.isStatic(m.getModifier() )  && (!Modifier.isFinal(m.getModifier()) ) ) {
+                           todo.addElement(m);
+                       }
+                   }
+                   buildSourceAll(out,todo,"static field");
+
+                   it.reset();
+                   todo.removeAllElements();
+                   while (it.hasMore()) {
+                       Member m=(Member)it.next();
+                       if ((m instanceof Field)&&(!Modifier.isStatic(m.getModifier()))) {
+                           todo.addElement(m);
+                       }
+                   }
+                   buildSourceAll(out,todo,"field");
+
+           	}
+
+               // initializers (must appear after field declarations to avoid forward references)
+
+               Code[] initializers = clazz.getStaticInitializers();
+               if (initializers.length>0) {
+                   buildHeader(out,'-',"static initializer", initializers.length);
+                   for (int i = 0; i < initializers.length; i++) {
+                       String code = initializers[i].getRaw();
+                       code=applyCodeFormatting(code);
+                       write(out,indent("static {",1));
+                       write(out,nl);
+                       write(out,code);
+                       write(out,nl);
+                       write(out,indent("}",1));
+                       write(out,nl);
+                   }
+               }
+
+               initializers = clazz.getInstanceInitializers();
+               if (initializers.length>0) {
+                   buildHeader(out,'-',"instance initializer", initializers.length);
+                   for (int i = 0; i < initializers.length; i++) {
+                       String code = initializers[i].getRaw();
+                       code=applyCodeFormatting(code);
+                       write(out,indent("{",1));
+                       write(out,nl);
+                       write(out,code);
+                       write(out,nl);
+                       write(out,indent("}",1));
+                       write(out,nl);
+                   }
+               }
+
+
+               it.reset();
+               todo.removeAllElements();
+               while (it.hasMore()) {
+                   Member m=(Member)it.next();
+                   if (m instanceof Constructor) {
+                       todo.addElement(m);
+                   }
+               }
+               buildSourceAll(out,todo,"constructor");
+
+               it.reset();
+               todo.removeAllElements();
+               while (it.hasMore()) {
+                   Member m=(Member)it.next();
+                   if ((m instanceof Method)&&(!Modifier.isStatic(m.getModifier()))) {
+                       todo.addElement(m);
+                   }
+               }
+               buildSourceAll(out,todo,"method");
+
+               it.reset();
+               todo.removeAllElements();
+               while (it.hasMore()) {
+                   Member m=(Member)it.next();
+                   if ((m instanceof Method)&&(Modifier.isStatic(m.getModifier()))) {
+                       todo.addElement(m);
+                   }
+               }
+               buildSourceAll(out,todo,"static method");
+
+
+               // inner classes and interfaces
+
+               it=clazz.getInnerClasses();
+               if (it.size()>0) {
+                   buildHeader(out,'*',(it.size()==1)?"inner class":"inner classes");
+                   while (it.hasMore()) {
+                       Class c=(Class)it.next();
+                       ByteArrayOutputStream outInner=new ByteArrayOutputStream();
+                       buildSource(outInner,c);
+                       String shifted=indent(new String(outInner.toByteArray()),1);
+                       write(out,shifted+nl);
+                   }
+               }
+
+               write(out,"} // end "+clazz.getUnqualifiedName()+nl);
+           }
+
+           // --- method / field
+
         else if ((o instanceof MemberExecutable)||(o instanceof Field)) {
-            Code code;
-            if (o instanceof MemberExecutable) {
-                code=((MemberExecutable)o).getCode();
-            }
-            else {
-                code=((Field)o).getCode();
-            }
-            
-            if (code!=null) {
-                String c=code.getRaw();
-                if (o instanceof MemberExecutable) {
-                    c=applyCodeFormatting(c);
-                    write(out," {"+nl);
-                    write(out,c+nl);
-                    write(out,indent("}",1)+nl);
-                } else { // Field
-                    write(out,"="+c+";"+nl);
-                }
-            }
-            else {
-                write(out,";"+nl);
-            }
-            write(out,nl);
-        }
+               Code code;
+               if (o instanceof MemberExecutable) {
+                   code=((MemberExecutable)o).getCode();
+               }
+               else {
+                   code=((Field)o).getCode();
+               }
+
+               if (code!=null) {
+                   String c=code.getRaw();
+                   if (o instanceof MemberExecutable) {
+                   	if (isOption("code.braces.linebreak")) { // start with curly brace on individual line
+                           write(out, nl);
+                           write(out,indent("{", 1)+nl);
+                   	} else { // output curly brace at the end of the method's declaration
+                   		write(out," {"+nl);
+                   	}
+                       c=applyCodeFormatting(c);
+                       write(out,c+nl);
+                       write(out,indent("}",1)+nl);
+                   } else { // Field
+                       write(out," = "+c+";"+nl);
+                   }
+               }
+               else {
+                   write(out,";"+nl);
+               }
+               write(out,nl);
+           }
     }
 
     /**
@@ -492,7 +594,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
     protected String getExceptionText(String exc) {
         if (exceptionTexts==null) { // auto-init on first call
             exceptionTexts=new Properties();
-            String t=defaultExceptionTexts+getOption(OPTION_EXCEPTION_TEXTS); // repeat defaultExceptionTexts to make sure that defaults are contained if the user sets own value, append in front to make user settings able to overwrite defaults
+            String t=defaultExceptionTexts+getOption("exception.texts"); // repeat defaultExceptionTexts to make sure that defaults are contained if the user sets own value, append in front to make user settings able to overwrite defaults
             StringTokenizer st=new StringTokenizer(t,",",false);
             while (st.hasMoreTokens()) {
                 String s=st.nextToken();
@@ -515,7 +617,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
     protected String getHeaderfile() {
         if (headerfileText==null) {
             // auto-init from project.headerfile
-            String filename=getOption(OPTION_PROJECT_HEADERFILE);
+            String filename=getOption("project.headerfile");
             if (filename!=null) {
                 File file=new File(filename);
                 if (file.isFile()) {
@@ -545,12 +647,12 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
             Class clazz=(Class)o;
             // @author
             String opt;
-            opt=getOption(OPTION_AUTHOR_NAME);
+            opt=getOption("author.name");
             if (opt!=null) {
                 buildTagDocumentationSynthesize(out,"class","author",null,opt,doc,supDoc,"",true);
             }
             // @version
-            opt=getOption(OPTION_PROJECT_VERSION);
+            opt=getOption("project.version");
             if (opt!=null) {
                 buildTagDocumentationSynthesize(out,"class","version",null,opt,doc,supDoc,"",true);
             }
@@ -558,10 +660,10 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
             MemberExecutable mex=(MemberExecutable)o;
             String unqualifiedName=o.getUnqualifiedName();
             String specialPrefix=getSpecialPrefix(unqualifiedName);
-            
+
             // @param
-            boolean createText=isOption(OPTION_METHOD_PARAM_CREATE_TEXT);
-            boolean createDummy=isOption(OPTION_METHOD_PARAM_CREATE_DUMMY);
+            boolean createText=hasOption("method.create.text", "param");
+            boolean createDummy=hasOption("method.create.dummy", "param");
             String type=getTypeCode(o);
             for (NamedIterator it=mex.getParameters();it.hasMore();) {
                 Parameter pa=(Parameter)it.next();
@@ -581,10 +683,10 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 }
                 buildTagDocumentationSynthesize(out,type,"param",pa.getName(),def,doc,supDoc,indent(1),true);
             }
-            
+
             // @throws
-            createText=isOption(OPTION_METHOD_THROWS_CREATE_TEXT);
-            createDummy=isOption(OPTION_METHOD_THROWS_CREATE_DUMMY);
+            createText=hasOption("method.create.text", "throws");
+            createDummy=hasOption("method.create.dummy", "throws");
             for (NamedIterator it=mex.getExceptions();it.hasMore();) {
                 Exception ex=(Exception)it.next();
                 String exc=ex.getUnqualifiedName();
@@ -596,12 +698,12 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 }
                 buildTagDocumentationSynthesize(out,type,"throws",exc,def,doc,supDoc,indent(1),true);
             }
-            
+
             // @return
             if (o instanceof Method) {
                 Method met=(Method)o;
-                createText=isOption(OPTION_METHOD_RETURN_CREATE_TEXT);
-                createDummy=isOption(OPTION_METHOD_RETURN_CREATE_DUMMY);
+                createText=hasOption("method.create.text", "return");
+                createDummy=hasOption("method.create.text", "return");
                 if (!(met.getType().getFullTypeName().equals("void"))) {
                     // get default text
                     String def=null;
@@ -657,7 +759,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
         DocumentationTagged tag=null;
         // tag already there?
         if (doc!=null) {
-            if (!isOption("doc."+typeName+"."+tagName+".remove.text")) {
+            if (!hasOption( typeName+".remove.text", tagName)) {
                 tag=doc.findTag("@"+tagName,tagItem);
             }
             String text=null;
@@ -668,7 +770,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 tag=null;
             }
             // remove dummy if activated
-            if ((tag!=null)&&isDummy(text)&&isOption("doc."+typeName+"."+tagName+".remove.dummy")) {
+            if ((tag!=null)&&isDummy(text)&&hasOption( typeName+".remove.dummy", tagName)) {
                 tag=null;
             }
         }
@@ -685,7 +787,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 tag=null;
             }
             // remove dummy if activated
-            if ((tag!=null)&&(isDummy(text)&&(isOption("doc."+typeName+"."+tagName+".remove.dummy")))) {
+            if ((tag!=null)&&(isDummy(text)&&(hasOption( typeName+".remove.dummy", tagName)))) {
                 tag=null;
             }
         }
@@ -720,7 +822,14 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      */
     protected void buildSourceAll(OutputStream out, Vector v, String header) throws IOException {
         //, InvalidOptionException
-        buildSourceAll(out,v,header,header+"s");
+        String headerPlural;
+        if (header != null) {
+        headerPlural = header + "s";
+        } else {
+        headerPlural = null;
+        }
+
+        buildSourceAll( out, v, header, headerPlural );
     }
 
     /**
@@ -738,13 +847,10 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * @throws IOException if an i/o error occurs
      */
     protected void buildSourceAll(OutputStream out, Vector v, String header, String headerPlural) throws IOException {
-        //, InvalidOptionException
         if (!v.isEmpty()) {
-            if (v.size()==1) {
-                buildHeader(out,'-',header);
-            } else {
-                buildHeader(out,'-',headerPlural);
-            }
+        	if ( (header != null) && (headerPlural != null) ) {
+        		buildHeader(out,'-',header, headerPlural, v.size());
+        	}
             // public
             for (Enumeration e=v.elements();e.hasMoreElements();) {
                 SourceObjectDeclared o=(SourceObjectDeclared)e.nextElement();
@@ -782,11 +888,33 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * @throws IOException if an i/o error occurs
      */
     protected void buildHeader(OutputStream out, char mark, String header) throws IOException {
-        if (isOption(OPTION_CODE_SEPARATORS)) {
+        if (isOption("code.separators")) {
             write(out,nl+indent("// "+chars(mark,72)+nl
             +"// "+chars(mark,3)+" "+header+spaces(65-header.length())+chars(mark,3)+nl
             +"// "+chars(mark,72)+nl,1)+nl);
         }
+    }
+
+    /**
+     * Outputs a seperating header, if the corresponding option is set. Depending on <code>num</code>,
+     * the plural or singular form is used (or nothing, if num==0).
+     *  
+     * @throws IOException if an i/o error occurs
+     */
+    protected void buildHeader(OutputStream out, char mark, String header, String headerPlural, int num) throws IOException {
+        if (num>0) {
+        	buildHeader(out, mark, (num!=1 ? headerPlural : header));
+        }
+    }
+
+    /**
+     * Outputs a seperating header, if the corresponding option is set. Depending on <code>num</code>,
+     * a plural or singular form is used (or nothing, if num==0). The plural is auto-generated by adding an 's'.
+     *  
+     * @throws IOException if an i/o error occurs
+     */
+    protected void buildHeader(OutputStream out, char mark, String header, int num) throws IOException {
+        buildHeader(out, mark, header, header+"s", num);
     }
 
     /**
@@ -797,14 +925,23 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * @return  Indented text.
      */
     protected String indent(String text, int steps) {
-        StringTokenizer st=new StringTokenizer(text,"\n\r",false);
+        StringTokenizer st=new StringTokenizer(text,"\n\r", true);
         StringBuffer sb=new StringBuffer();
-        int spaces=getIntOption(OPTION_CODE_INDENT_SPACES);
+        int spaces=getIntOption("code.indent.spaces"); // TODO: optimize
+        char lastBreak = (char)0;
+
         while (st.hasMoreTokens()) {
             String line=st.nextToken();
-            sb.append(spaces(steps*spaces)+line);
-            if (st.hasMoreTokens()) {
-                sb.append(nl);
+            char first = line.charAt(0);
+            if (first=='\n' || first=='\r') { // delimiter token
+            		if ( (lastBreak==(char)0) || lastBreak==first  ) {
+            			sb.append(nl); // etxtra blank line
+            			lastBreak = first;
+            		}
+            } else { // full line token
+            	sb.append(spaces(steps*spaces));
+            	sb.append(line);
+            	lastBreak = (char)0;
             }
         }
         return sb.toString();
@@ -814,7 +951,7 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * Returns a string with spaces. The number is determined by steps*option('code.indent.spaces').
      */
     protected String indent(int steps) {
-        int spaces=getIntOption(OPTION_CODE_INDENT_SPACES);
+        int spaces=getIntOption("code.indent.spaces"); // TODO: optimize
         return spaces(steps*spaces);
     }
 
@@ -822,15 +959,14 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      * Apply code transformations according to options set by the user.
      */
     protected String applyCodeFormatting(String code) {
-        if (isOption(OPTION_CODE_CLEAN)) {
+        if (isOption("code.clean")) {
             code=cleanCode(code);
         }
-        if (isOption(OPTION_CODE_FORMAT)) {
-            code=indent(format(code),2);
-        } else {
-            code=indent(2)+code; // indent first line (assumed as always the right decision for the very first line, necessary because the header is always auto-indented to indentLevel=1)
+        if (isOption("code.format")) {
+        	code = format(code);
         }
-        return trimRight(code);
+        code = indent(code, 2);
+        return code;
     }
 
     /**
@@ -852,10 +988,12 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
             int indentLevel=0;
             int indentLevelDiff=0;
             boolean newline=false;
+            boolean previousNewline=false;
             int i=0;
             char c=(char)0;
             char prevC;
             char nextC=code.charAt(0);
+
             while (i<codeLength) {
                 prevC=c;
                 c=nextC;
@@ -864,33 +1002,36 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                 } else {
                     nextC=(char)0;
                 }
-                
+
                 if (escape) { // escaped char
                    line.append(c);
                    escape=false;
-                   
+
                 } else if (comment=='/') { // line comment
                     if (c=='\n') {
                         newline=true;
+            			previousNewline = true;
                         comment=(char)0;
                     }
                     line.append(c);
-                    
+
                 } else if (comment=='*') { // block comment
                     if (c=='/'&&prevC=='*') {
                         comment=(char)0;
                     }
                     line.append(c);
-                    
+
                 } else if (quoted!=(char)0) { // quoted text, either ".." or '..'
+
                     if (c=='\\') {
                         escape=true;
                     } else if (quoted==c) { // quote char again: end quoting
                         quoted=(char)0;
                     }
                     line.append(c);
-                    
+
                 } else { // normal code
+
                     switch (c) {
                         case '\\': escape=true;
                                    break;
@@ -901,7 +1042,9 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                         case '\"':
                         case '\'': quoted=c;
                                    break;
-                        case '\n': newline=true;
+                        case '\n':
+                        			newline=previousNewline; // explicit newline only if no other (auto-generated) newline since last explicit newline
+                        			previousNewline = true;
                                    break;
                         case ';':  String l=line.toString().trim();
                                    if (!l.startsWith("for")) { // special: no line break after ; in for-loop declaration
@@ -917,23 +1060,29 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
                                        line=new StringBuffer();
                                    }
                                    indentLevel-=1;
-                                   // no newline=true
+                                   newline = (nextC=='\n'); // cheap trick  to make sure we don't loose blank lines after } (will fail if e.g. "} \n" )
                                    break;
                     }
                     line.append(c);
-                    if (i==codeLength-1) { // always output last line if end reached
-                        newline=true;
-                    }
-                    if (newline) {
-                        sb.append(indent(line.toString().trim(),indentLevel));
-                        sb.append(nl);
-                        indentLevel+=indentLevelDiff;
-                        indentLevelDiff=0;
-                        line=new StringBuffer();
-                        newline=false;
+
+                }
+
+                i++; // next char
+                if (i>=codeLength) { // always output last line if end reached
+                    newline=true;
+                }
+                if (newline) {
+                    sb.append(indent(line.toString().trim(),indentLevel));
+                    if (i < codeLength) { // prepare for next line if end not reached,also output nl only in that case
+                    	sb.append(nl);
+                    	indentLevel+=indentLevelDiff;
+                    	indentLevelDiff=0;
+                    	line=new StringBuffer();
+                    	newline=false;
+                    	previousNewline = false;
                     }
                 }
-                i++; // next char
+
             }
             return sb.toString();
         } else {
@@ -941,10 +1090,54 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
         }
     }
 
+    protected String unqualifyClassname(Class inClass, String name) {
+        String result;
+        if (name.indexOf('.')!=-1) { // not unqualified already
+           	String u = unqualify(name);
+        	String rest = name.substring(0, name.length()-u.length()-1);
+        	// is parent-identifier a class? (not package) - then it is an inner class
+        	if (Package.isSourcePackage(inClass.getPackage().getBasePackage(), rest)) { // optimization, but will not find a package if from classpath
+        		result = u;
+        	} else {
+        		String outer;
+        		try {
+        			outer = inClass.qualify(rest);
+        			result = unqualifyClassname(inClass, outer) + "." + u;
+        		} catch (NoClassDefFoundError ncdfe) {
+        			result = u;
+        		}
+        	}
+        } else {
+        	result = name;
+        }
+        return makeSureIsQualifyable(inClass, result, name);
+    }
+
+    /**
+     * Tests if an unqulified class name can be fully qualified inside a class declaration.
+     * If this is not the case, depending on the user-option '-code.auto.import' an import statement
+     * is generated, or just a warning message is output.
+     */
+    protected String makeSureIsQualifyable(Class inClass, String unqualified, String qualified) {
+            	try {
+            		inClass.qualify(unqualified);
+            		return unqualified;
+            	} catch (NoClassDefFoundError ncdfe) {
+            		if (isOption("code.qualify.auto")) {
+            			// auto-generate import statement
+            			return qualified;
+            		} else {
+            			System.err.println("warning: in class "+inClass.getName()+": outputting unqualified classname '"+unqualified+"', although it seems to be not fully qualifyable. If this leads to problems when compiling, try option -code.qualify.auto, or use -code.qualify to always use fully qualified classnames.");
+            			return unqualified;
+            		}
+            	}
+    }
+
 
     // ------------------------------------------------------------------------
     // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
     /**
      * Appends a vertical line of star characters in front of <code>s</code>.
      * <code>s</code> may contain multiple lines, seperated by either \n or \r,
@@ -1082,11 +1275,14 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
         try {
             String l=b.readLine();
             while (l!=null) {
+            	String nextL = b.readLine();
                 if (!isDeadCodeLine(l)) {
                     r.append(l);
-                    r.append(nl);
+                    if (nextL != null) {
+                    	r.append(nl);
+                    }
                 }
-                l=b.readLine();
+                l = nextL;
             }
         } catch (IOException io) {
             r.append("// *** ERROR: IOException while cleaning code");
@@ -1167,17 +1363,6 @@ public class StandardSourclet extends AbstractSourclet implements StandardSourcl
      */
     protected static void buildDocumentationTagged(OutputStream out, DocumentationTagged tag, String spaces) throws IOException {
         write(out,startWithStars(tag.getTag()+" "+(((tag.getItem()!=null)?tag.getItem():"")+" "+tag.getText()),spaces));
-    }
-
-    /**
-     * Removes all whitespace at the end of the string.
-     */
-    protected static String trimRight(String s) {
-        int pos=s.length();
-        while ((pos>=1)&&(Character.isWhitespace(s.charAt(pos-1)))) {
-            pos--;
-        }
-        return s.substring(0,pos);
     }
 
 } // end StandardSourclet

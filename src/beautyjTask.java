@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   beautyjTask
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -30,7 +30,7 @@ import de.gulden.application.beautyj.ant.Task;
  * classes in the classpath.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class beautyjTask extends Task {
 } // end beautyjTask

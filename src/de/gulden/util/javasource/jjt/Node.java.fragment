@@ -1,0 +1,37 @@
+  /*** added by Jens *********************************************************/
+
+  public int getId();
+  
+  public Node getChild(int id);
+  
+  public boolean hasChild(int id);
+  
+  public Node[] getChildren(int id);
+  
+  public Node[] getAllChildren();
+  
+  public String getValue();
+  
+  public void setValue(String v);
+  
+  public String getName();
+  
+  public String retrieveName();
+  
+  public void setStartToken(Token t);
+
+  public void setEndToken(Token t);
+  
+  public Token getStartToken();
+
+  public Token getEndToken();
+
+  public void setTextImage(TextImage ti);
+  
+  public TextImage getTextImage();
+  
+  public String getSource();
+  
+  public void setSource(String source);
+  
+  public int[] getSourcePosition();

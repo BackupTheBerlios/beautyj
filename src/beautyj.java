@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   beautyj
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -22,13 +22,14 @@
  * classpath.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class beautyj {
 
     // ------------------------------------------------------------------------
     // --- static method                                                    ---
     // ------------------------------------------------------------------------
+
     /**
      * Passes the call to BeautyJ's main class
      * de.gulden.application.beautyj.Main.
@@ -36,7 +37,7 @@ public class beautyj {
      * @param args The command line arguments passed from the shell.
      * @see  de.gulden.application.beautyj.Main#main
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         de.gulden.application.beautyj.Main.main(args);
     }
 

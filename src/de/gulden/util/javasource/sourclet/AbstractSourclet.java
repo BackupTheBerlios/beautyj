@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.sourclet.AbstractSourclet
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -24,33 +24,36 @@ import java.util.*;
  * Class AbstractSourclet.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public abstract class AbstractSourclet implements Sourclet, SourcletOptions {
 
     // ------------------------------------------------------------------------
     // --- static field                                                     ---
     // ------------------------------------------------------------------------
+
     /**
      * Helper for quick newline character(s) access.
      */
-    public static String nl=System.getProperty("line.separator");
+    public static String nl = System.getProperty("line.separator");
 
 
     // ------------------------------------------------------------------------
     // --- field                                                            ---
     // ------------------------------------------------------------------------
+
     /**
      * Proxy object that may work as provider of option values.
      *  
      * @see  #setOptions
      */
-    protected SourcletOptions options=null;
+    protected SourcletOptions options = null;
 
 
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of AbstractSourclet.
      */
@@ -62,6 +65,7 @@ public abstract class AbstractSourclet implements Sourclet, SourcletOptions {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Sets an object that works as a proxy for asccessing option values.
      * The default implementations of <code>getOption</code>,
@@ -122,15 +126,31 @@ public abstract class AbstractSourclet implements Sourclet, SourcletOptions {
     }
 
     /**
+     * Passes requests for option values to the SourcletOptions proxy object that has been set through setOptions(..).
+     * May be overwritten by a subclass to provide options from a different source.
+     */
+    public boolean isOption(String name, String value) {
+        return options.isOption(name, value);
+    }
+
+    /**
+     * Passes requests for option values to the SourcletOptions proxy object that has been set through setOptions(..).
+     * May be overwritten by a subclass to provide options from a different source.
+     */
+    public boolean hasOption(String name, String value) {
+        return options.hasOption(name, value);
+    }
+
+    /**
      * Outputs the source code for an entire SourceObject to an OutputStream.
      *  
      * @throws IOException if an i/o error occurs
      */
     public void buildSource(OutputStream out, SourceObjectDeclared o) throws IOException {
-            buildStartSource(out,o);
-    buildHeadSource(out,o);
-    buildBodySource(out,o);
-    buildEndSource(out,o);
+        buildStartSource(out,o);
+        buildHeadSource(out,o);
+        buildBodySource(out,o);
+        buildEndSource(out,o);
     }
 
     /**
@@ -172,6 +192,7 @@ public abstract class AbstractSourclet implements Sourclet, SourcletOptions {
     // ------------------------------------------------------------------------
     // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
     /**
      * Tool method for writing a string to an OutputStream.
      *  

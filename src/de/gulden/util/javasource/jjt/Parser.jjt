@@ -8,26 +8,24 @@
  * 3. javac:  Parser.java -->  Parser.class
  *
  * This is a modified version of the original Java 1.1 grammar specification
- * from Sun (see comment below).
+ * (see comment below).
  *
  * All identifiers of the form '_IDENTIFIER' (i.e., starting with an underscore
  * and then followed by uppercase letters) mark modifications of the original.
  *
- * Copyright (C) Jens Gulden 2001.
+ * Copyright (c) Jens Gulden 2001-2004.
  *
  * This is licensed under the GNU General Public License (GPL).
  */
 
 options
 {
-  JAVA_UNICODE_ESCAPE=true;
+  JAVA_UNICODE_ESCAPE=true; // but unicode-resolving manually disabled to get raw source (+workaround for single-char unicode)
 
   STATIC=false;
-//  MULTI=true;
   MULTI=false;
   NODE_PREFIX="AST_";
   NODE_DEFAULT_VOID=true;
-//  NODE_SCOPE_HOOK=false;
   NODE_SCOPE_HOOK=true;
   LOOKAHEAD=1;
   CHOICE_AMBIGUITY_CHECK=2;
@@ -113,6 +111,14 @@ PARSER_END(Parser)
  *
  * The following is modified from the original Java 1.1 grammar specification.
  *
+ * Some modifications:
+ * - added several '(";")*' to allow more semicolons that originally (some
+ *   original Java sources use this, which have been used for testing)
+ * - added handling of JDK 1.4's 'assert'-keyword (taken from Sreenivasa Viswanadha's
+ *   JDK 1.5-grammar).
+ * - added handling of JDK 1.2's 'strictfp'-keyword (which most likely is only needed
+ *   for parsing Java's own language API sources in class java.lang.Math).    
+ *
  * Author: Jens Gulden
  *
  * ---------------------------------------------------------------------------
@@ -191,6 +197,7 @@ MORE :
 TOKEN :
 {
   < ABSTRACT: "abstract" >
+| < ASSERT: "assert" >
 | < BOOLEAN: "boolean" >
 | < BREAK: "break" >
 | < BYTE: "byte" >
@@ -228,6 +235,7 @@ TOKEN :
 | < RETURN: "return" >
 | < SHORT: "short" >
 | < STATIC: "static" >
+| < STRICTFP: "strictfp" >
 | < SUPER: "super" >
 | < SWITCH: "switch" >
 | < SYNCHRONIZED: "synchronized" >
@@ -452,7 +460,7 @@ void ImportDeclaration() #_IMPORT(true) :
 void TypeDeclaration() :
 {}
 {
-  LOOKAHEAD( ( "abstract" | "final" | "public" )* "class" )
+  LOOKAHEAD( ( "abstract" | "final" | "strictfp" | "public" )* "class" )
   ClassDeclaration()
 |
   InterfaceDeclaration()
@@ -468,7 +476,7 @@ void TypeDeclaration() :
 void ClassDeclaration() #_CLASS(true) :
 {}
 {
-  ( _ABSTRACT() | _FINAL() | _PUBLIC() )* #_MODIFIER(true)
+  ( _ABSTRACT() | _FINAL() | _STRICTFP() | _PUBLIC() )* #_MODIFIER(true)
   UnmodifiedClassDeclaration()
 }
 
@@ -488,7 +496,7 @@ void ClassBody() :
 void NestedClassDeclaration() #_INNERCLASS(true) :
 {}
 {
-  ( _STATIC() | _ABSTRACT() | _FINAL() | _PUBLIC() | _PROTECTED() | _PRIVATE() )* #_MODIFIER(true)
+  ( _STATIC() | _ABSTRACT() | _FINAL() | _STRICTFP() | _PUBLIC() | _PROTECTED() | _PRIVATE() )* #_MODIFIER(true)
   UnmodifiedClassDeclaration()
 }
 
@@ -496,28 +504,28 @@ void ClassBodyDeclaration() :
 {}
 {
   LOOKAHEAD(2)
-  Initializer()
+  Initializer() (";")*
 |
-  LOOKAHEAD( ( "static" | "abstract" | "final" | "public" | "protected" | "private" )* "class" )
-  NestedClassDeclaration()
+  LOOKAHEAD( ( "static" | "abstract" | "final" | "strictfp" | "public" | "protected" | "private" )* "class" )
+  NestedClassDeclaration() (";")*
 |
   LOOKAHEAD( ( "static" | "abstract" | "final" | "public" | "protected" | "private" )* "interface" )
-  NestedInterfaceDeclaration()
+  NestedInterfaceDeclaration() (";")*
 |
   LOOKAHEAD( [ "public" | "protected" | "private" ] Name() "(" )
-  ConstructorDeclaration()
+  ConstructorDeclaration() (";")*
 |
   LOOKAHEAD( MethodDeclarationLookahead() )
-  MethodDeclaration()
+  MethodDeclaration() (";")*
 |
-  FieldDeclaration()
+  FieldDeclaration() (";")*
 }
 
 // This production is to determine lookahead only.
 void MethodDeclarationLookahead() :
 {}
 {
-  ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "native" | "synchronized" )*
+  ( "public" | "protected" | "private" | "static" | "abstract" | "final" | "strictfp" | "native" | "synchronized" )*
   ResultType() <IDENTIFIER> "("
 }
 
@@ -545,22 +553,22 @@ void UnmodifiedInterfaceDeclaration() :
 void InterfaceMemberDeclaration() :
 {}
 {
-  LOOKAHEAD( ( "static" | "abstract" | "final" | "public" | "protected" | "private" )* "class" )
-  NestedClassDeclaration()
+  LOOKAHEAD( ( "static" | "abstract" | "final" | "strictfp" | "public" | "protected" | "private" )* "class" )
+  NestedClassDeclaration() (";")*
 |
   LOOKAHEAD( ( "static" | "abstract" | "final" | "public" | "protected" | "private" )* "interface" )
-  NestedInterfaceDeclaration()
+  NestedInterfaceDeclaration() (";")*
 |
   LOOKAHEAD( MethodDeclarationLookahead() )
-  MethodDeclaration()
+  MethodDeclaration() (";")*
 |
-  FieldDeclaration()
+  FieldDeclaration() (";")*
 }
 
 void FieldDeclaration() #_FIELD(true) :
 {}
 {
-  ( _PUBLIC() | _PROTECTED() | _PRIVATE() | _STATIC() | _FINAL() | _TRANSIENT() | _VOLATILE() )* #_MODIFIER(true)
+  ( _PUBLIC() | _PROTECTED() | _PRIVATE() | _STATIC() | _FINAL() | _TRANSIENT() | _VOLATILE() | _STRICTFP() )* #_MODIFIER(true)
   Type() VariableDeclarator() ( "," VariableDeclarator() )* ";"
 }
 
@@ -593,7 +601,7 @@ void ArrayInitializer() :
 void MethodDeclaration() #_METHOD(true) :
 {}
 {
-  ( _PUBLIC() | _PROTECTED() | _PRIVATE() | _STATIC() | _ABSTRACT() | _FINAL() | _NATIVE() | _SYNCHRONIZED() )* #_MODIFIER(true)
+  ( _PUBLIC() | _PROTECTED() | _PRIVATE() | _STATIC() | _ABSTRACT() | _FINAL() | _STRICTFP() | _NATIVE() | _SYNCHRONIZED() )* #_MODIFIER(true)
   ResultType() MethodDeclarator() [ "throws" NameList() #_THROWS(true) ]
   ( Block() #_CODE(true) | ";" )
 }
@@ -639,7 +647,7 @@ void ExplicitConstructorInvocation() :
 void Initializer() #_INITIALIZER(true) :
 {}
 {
-  [ "static" ] Block() #_CODE(true)
+  [ "static" #_STATIC(true) ] Block() #_CODE(true)
 }
 
 
@@ -790,6 +798,12 @@ void _VOLATILE() #_VOLATILE :
 {}
 {
   "volatile"
+}
+
+void _STRICTFP() #_STRICTFP :
+{}
+{
+  "strictfp"
 }
 
 void _NATIVE() #_NATIVE :
@@ -1085,6 +1099,8 @@ void Statement() :
   LOOKAHEAD(2)
   LabeledStatement()
 |
+  AssertStatement()
+|
   Block()
 |
   EmptyStatement()
@@ -1112,6 +1128,12 @@ void Statement() :
   SynchronizedStatement()
 |
   TryStatement()
+}
+
+void AssertStatement():
+{}
+{
+  "assert" Expression() [ ":" Expression() ] ";"
 }
 
 void LabeledStatement() :

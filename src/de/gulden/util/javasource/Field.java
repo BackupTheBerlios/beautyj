@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Field
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -28,13 +28,14 @@ import java.util.*;
  * Represents a field definition.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Field extends Member implements Typed {
 
     // ------------------------------------------------------------------------
     // --- field                                                            ---
     // ------------------------------------------------------------------------
+
     /**
      * The type.
      */
@@ -44,6 +45,7 @@ public class Field extends Member implements Typed {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Field.
      */
@@ -55,6 +57,7 @@ public class Field extends Member implements Typed {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the type.
      */
@@ -95,12 +98,12 @@ public class Field extends Member implements Typed {
     public void initFromXML(Element element) throws IOException {
         // to be extended (not overwritten) by subclasses
         super.initFromXML(element);
-        
+
         // type
         Element ty=XMLToolbox.getChildRequired(element,"type");
         type=new Type(this);
         type.initFromXML(ty);
-        
+
         // field initializer
         Element in=XMLToolbox.getChild(element,"initializer");
         if (in!=null) {
@@ -122,10 +125,10 @@ public class Field extends Member implements Typed {
         super.initFromAST(rootnode);
         String className=getDeclaringClass().getName();
         name=className+"."+varnode.getName();
-        
+
         type=new Type(this);
-        type.initFromAST(rootnode); // special way of invoking (using rootnode)
-        
+        type.initFromAST(rootnode, varnode); // special way of invoking (using rootnode, varnode)
+
         Node codenode=varnode.getChild(JJT_CODE);
         if (codenode!=null) // field has initializer
         {

@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Type
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -27,13 +27,14 @@ import java.util.*;
  * Represents a type.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Type implements ParserTreeConstants, Serializable {
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      * The type name.
      */
@@ -53,6 +54,7 @@ public class Type implements ParserTreeConstants, Serializable {
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Type.
      */
@@ -64,11 +66,12 @@ public class Type implements ParserTreeConstants, Serializable {
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the unqualified type name.
      */
     public String getUnqualifiedTypeName() {
-        return SourceObject.unqualify(typeName);
+        return SourceObject.unqualify(typeName, countOuterClasses(typeName));
     }
 
     /**
@@ -82,7 +85,14 @@ public class Type implements ParserTreeConstants, Serializable {
      * Returns the full type name.
      */
     public String getFullTypeName() {
-        return typeName+SourceParser.repeat("[]",dimension);
+        return getTypeName() + SourceParser.repeat("[]",dimension);
+    }
+
+    /**
+     * Returns the full type name.
+     */
+    public String getFullUnqualifiedTypeName() {
+        return getUnqualifiedTypeName() + SourceParser.repeat("[]",dimension);
     }
 
     /**
@@ -149,43 +159,95 @@ public class Type implements ParserTreeConstants, Serializable {
      * Initialize this object from parsed Java code.
      * Special way of invoking.
      *  
-     * @param fathernode An additional father node from where array-declarators are recursively counted. May be null.
+     * @param fathernode A father node from where array-declarators are recursively counted.
      */
     void initFromAST(Node fathernode) {
-        Node rootnode=fathernode.getChild(JJT_TYPE);
-        if (rootnode.getChild(JJT_NAME)!=null) {
-            String n=rootnode.getName();
+        initFromAST(fathernode, null);
+    }
+
+    /**
+     * Initialize this object from parsed Java code.
+     * Special way of invoking.
+     *  
+     * @param fathernode A father node from where array-declarators are recursively counted. May be null.
+     * @param varnode variable declarator node from where additional array-declarators are recursively counted. May be null.
+     */
+    void initFromAST(Node fathernode, Node varnode) {
+        Node typenode=fathernode.getChild(JJT_TYPE);
+        if (typenode.getChild(JJT_NAME)!=null) {
+            String n=typenode.getName();
             typeName=myMember.getDeclaringClass().qualify(n);
-        }
-        else {
+        } else {
             typeName="void";
         }
         Node searchNode;
-        if (fathernode.getId()==JJT_METHOD) {
-            searchNode=rootnode; // for methods, look at type only to not get array dimensions of parameter declarations of style xy(String a[])
+        if (varnode != null) {
+        	searchNode = typenode;
         } else {
             searchNode=fathernode;
         }
-        dimension=countArrayDimension(searchNode);
+        dimension = countArrayDimension(searchNode);
+        if (varnode != null) {
+        	dimension += countArrayDimension(varnode);
+        }
     }
+
+    private int countOuterClasses(String classname) {
+        // is classname referencing source?
+        Package basePackage = myMember.getPackage().getBasePackage();
+        Class clazz = basePackage.findClass(classname);
+        if (clazz != null) { // yes, known from source
+        	int cnt = 0;
+        	while (clazz instanceof ClassInner) {
+        		cnt++;
+        		clazz = ((ClassInner)clazz).getDeclaringClass();
+        	}
+        	return cnt;
+        } else { // get from classpath
+        	int cnt = 0;
+        	boolean found = false;
+        	do {
+        		try {
+        			//cl.loadClass(classname); // will fail if not inner class
+        			java.lang.Class.forName(classname); // will throw exception if the name is a _valid_ inner class name, because inner classes must be seperated by '$' from their parents
+        			found = true;
+        		} catch (ClassNotFoundException cnfe) {
+        			cnt++;
+        			// remove last component, until a non-inner class is reached
+        			int pos = classname.lastIndexOf('.');
+        			if (pos == -1) { // should actually not happen as we assume parameter classname is aready qualified (and verified for existance by doing that)
+        				return 0;
+        			}
+        			classname = classname.substring(0, pos);
+        		}
+        	} while(!found);
+        	return cnt;
+        }
+    }
+
+
+    // ------------------------------------------------------------------------
+    // --- static method                                                    ---
+    // ------------------------------------------------------------------------
 
     /**
      * Traverse through sub-tree and count occurrences of _ISARRAY-node.
      */
-    private int countArrayDimension(Node n) {
+    private static int countArrayDimension(Node n) {
         if (n.getId()==JJT_ISARRAY) {
-            return 1;
-        }
-        else if (n.getId()==JJT_CODE) {
+          	return 1;
+        } else if (n.getId()==JJT_CODE) {
             return 0; // do not recurse into code-section
-        }
-        else {
+        } else {
             int sum=0;
             Node[] children=n.getAllChildren();
             for (int i=0;i<children.length;i++) {
-                sum+=countArrayDimension(children[i]); // recursion
+            	Node child = children[i];
+            	if ( child.getId()!=JJT_PARAMETER ) { // don't recurse into parameter (if n if JJT_METHOD), testing here allows still the first call with n.getId()==JJT_PARAMETER when parsing parameters
+            		sum+=countArrayDimension(children[i]); // recursion
+            	}
             }
-            return sum;
+           	return sum;
         }
     }
 

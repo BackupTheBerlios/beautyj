@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.SourceObject
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -27,22 +27,24 @@ import java.util.*;
  * This is the common super-class of all classes in this package which represent Java source code element declarations.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public abstract class SourceObject implements Named, Serializable, ParserTreeConstants {
 
     // ------------------------------------------------------------------------
     // --- static field                                                     ---
     // ------------------------------------------------------------------------
+
     /**
      * The nl.
      */
-    public static String nl=System.getProperty("line.separator");
+    public static String nl = System.getProperty("line.separator");
 
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      * The my package.
      */
@@ -57,6 +59,7 @@ public abstract class SourceObject implements Named, Serializable, ParserTreeCon
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the name.
      */
@@ -151,13 +154,14 @@ public abstract class SourceObject implements Named, Serializable, ParserTreeCon
     void initFromAST(Node rootnode) {
         // get name
         name=rootnode.getName();
-       // to be extended (not overwritten) by subclasses
+        // to be extended (not overwritten) by subclasses
     }
 
 
     // ------------------------------------------------------------------------
     // --- static methods                                                   ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the unqualified name part of the string.
      *  
@@ -170,6 +174,25 @@ public abstract class SourceObject implements Named, Serializable, ParserTreeCon
             return n.substring(pos+1);
         }
         else {
+            return n;
+        }
+    }
+
+    /**
+     * Returns a less qualified name part of the string, including withParents parents, too.
+     *  
+     * @param n The qualified name.
+     * @return  The name's part after the withParent's-last occurrence of '.', or the unchanged name if no '.' is contained.
+     */
+    static String unqualify(String n, int withParents) {
+        int pos=n.lastIndexOf('.');
+        while ((pos > 0) && (withParents > 0)) {
+        	pos = n.lastIndexOf('.', pos-1);
+        	withParents--;
+        }
+        if (pos != -1) {
+            return n.substring(pos+1);
+        } else {
             return n;
         }
     }

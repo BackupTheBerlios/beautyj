@@ -1,9 +1,9 @@
 /*
  * Project: BeautyJ - Customizable Java Source Code Transformer
  * Class:   de.gulden.util.javasource.Parameter
- * Version: 1.0
+ * Version: 1.1
  *
- * Date:    2002-10-27
+ * Date:    2004-09-29
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -27,13 +27,14 @@ import java.util.*;
  * Represents a parameter declaration.
  *  
  * @author  Jens Gulden
- * @version  1.0
+ * @version  1.1
  */
 public class Parameter extends SourceObjectDeclared implements Typed, ParserTreeConstants {
 
     // ------------------------------------------------------------------------
     // --- fields                                                           ---
     // ------------------------------------------------------------------------
+
     /**
      * The executable member to which this parameter belongs.
      */
@@ -53,6 +54,7 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
     // ------------------------------------------------------------------------
     // --- constructor                                                      ---
     // ------------------------------------------------------------------------
+
     /**
      * Creates a new instance of Parameter.
      */
@@ -64,6 +66,7 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
     // ------------------------------------------------------------------------
     // --- methods                                                          ---
     // ------------------------------------------------------------------------
+
     /**
      * Returns the name.
      */
@@ -99,7 +102,7 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
      * @see  #initFromXML
      */
     public Element buildXML(Document d) {
-                Element e=super.buildXML(d);
+        Element e=super.buildXML(d);
         e.appendChild(getType().buildXML(d));
         return e;
     }
@@ -118,6 +121,7 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
     }
 
     /**
+     * Returns the documentation.
      */
     public Documentation getDocumentation() {
         // overwrites SourceObjectDeclared.getDocumentation().
@@ -131,11 +135,24 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
     }
 
     /**
+     * Returns the executable member to which this parameter belongs.
+     */
+    public MemberExecutable getMemberExecutable() {
+        return myMemberExecutable;
+    }
+
+    /**
      * Initialize this object from parsed Java code.
      *  
      * @param rootnode The corresponding node in the abstract syntax tree (AST).
      */
     void initFromAST(Node rootnode) {
+        // get modifier 'final'
+        this.modifier=0;
+        if (rootnode.hasChild(JJT_FINAL)) {
+            this.modifier|=java.lang.reflect.Modifier.FINAL;
+        }
+
         name=rootnode.getName();
         type=new Type(myMemberExecutable);
         type.initFromAST(rootnode); // special way of invoking (using rootnode)
@@ -145,6 +162,7 @@ public class Parameter extends SourceObjectDeclared implements Typed, ParserTree
     // ------------------------------------------------------------------------
     // --- static method                                                    ---
     // ------------------------------------------------------------------------
+
     /**
      * Adds a documentation to member.
      */

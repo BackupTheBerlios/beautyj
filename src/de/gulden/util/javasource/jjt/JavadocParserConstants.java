@@ -5,21 +5,20 @@ public interface JavadocParserConstants {
 
   int EOF = 0;
   int EOL = 4;
-  int STAR = 5;
-  int SLASH = 6;
-  int DOCSTART = 7;
-  int DOCEND = 8;
-  int WORD = 9;
-  int TAG_AUTHOR = 10;
-  int TAG_DEPRECATED = 11;
-  int TAG_EXCEPTION = 12;
-  int TAG_PARAM = 13;
-  int TAG_RETURN = 14;
-  int TAG_SEE = 15;
-  int TAG_SINCE = 16;
-  int TAG_THROWS = 17;
-  int TAG_VERSION = 18;
-  int TAG_ID = 19;
+  int DOCSTART = 5;
+  int DOCEND = 6;
+  int STAR = 7;
+  int TAG_AUTHOR = 8;
+  int TAG_DEPRECATED = 9;
+  int TAG_EXCEPTION = 10;
+  int TAG_PARAM = 11;
+  int TAG_RETURN = 12;
+  int TAG_SEE = 13;
+  int TAG_SINCE = 14;
+  int TAG_THROWS = 15;
+  int TAG_VERSION = 16;
+  int TAG_ID = 17;
+  int WORD = 18;
 
   int DEFAULT = 0;
 
@@ -29,11 +28,9 @@ public interface JavadocParserConstants {
     "\"\\r\"",
     "\"\\t\"",
     "\"\\n\"",
-    "\"*\"",
-    "\"/\"",
     "<DOCSTART>",
     "\"*/\"",
-    "<WORD>",
+    "\"*\"",
     "\"@author\"",
     "\"@deprecated\"",
     "\"@exception\"",
@@ -44,6 +41,7 @@ public interface JavadocParserConstants {
     "\"@throws\"",
     "\"@version\"",
     "\"@id\"",
+    "<WORD>",
   };
 
 }

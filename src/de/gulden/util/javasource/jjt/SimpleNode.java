@@ -2,12 +2,7 @@
 
 package de.gulden.util.javasource.jjt;
 
-import java.util.*;
-
-public class SimpleNode implements Node, ParserTreeConstants
-{
-  private final static Node[] EMPTY=new Node[0];
-  
+public class SimpleNode implements Node {
   protected Node parent;
   protected Node[] children;
   protected int id;
@@ -23,7 +18,6 @@ public class SimpleNode implements Node, ParserTreeConstants
   }
 
   public void jjtOpen() {
-    
   }
 
   public void jjtClose() {
@@ -74,8 +68,11 @@ public class SimpleNode implements Node, ParserTreeConstants
       }
     }
   }
-  
-  /*--- Jens ---*/
+
+
+  /*** added by Jens *********************************************************/
+
+  private final static Node[] EMPTY=new Node[0];
   
   protected String value;
   protected Token[] tokenRange=new Token[2];
@@ -114,7 +111,7 @@ public class SimpleNode implements Node, ParserTreeConstants
   {
     if (children!=null)
     {
-      Vector v=new Vector(5);
+      java.util.Vector v=new java.util.Vector(5);
       for (int i=0;i<children.length;i++)
       {
         if (children[i].getId()==id)
@@ -151,12 +148,13 @@ public class SimpleNode implements Node, ParserTreeConstants
   
   public void setValue(String v)
   {
+//System.out.print(v+" ");  	
     value=v;
   }
   
   public String getName()
   {
-    Node node=getChild(JJT_NAME);
+    Node node=getChild(ParserTreeConstants.JJT_NAME);
     if (node!=null)
     {
       return node.retrieveName();
@@ -241,3 +239,4 @@ public class SimpleNode implements Node, ParserTreeConstants
     return pos;
   }
 }
+

@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+    AMODA Application Description v 0.5
+
+    Document type describing concepts used by the AMODA application framework
+    and its implementing ApplicationEnvironments.
+    
+    The content gets parsed once during startup of an AMODA application by the
+    application's ApplicationEnvironment or ApplicationEnvironmentFactory.
+    According to the descriptions in this file, instances of application
+    members are then instantiated which are used by the application at
+    runtime.
+    
+    XML files of this document type are typically created by software
+    developers as part of the internal source code of a project. The contents
+    are usually not to be edited by the end user. As a consequence of this,
+    it is recommended to distribute an AMODA application description file
+    together with compiled .class files inside an application's .jar code
+    archive and let the ApplicationEnvironment access it as a resource from
+    the classpath. The default location used by the AMODA
+    ApplicationEnvironment implementations is a file called 'application.xml'
+    inside the same Java package as the project Application class (this is the
+    class extending a subclass of GenericApplication or directly implementing 
+    the model interface de.gulden.framework.amoda.model.Application).
+    
+    This DTD is provided for manual validation during development of the
+    AMODA application. By default, an ApplicationEnvironment's implementation
+    will not validate the XML using the DTD when initializing the application.
+    
+    This is licensed under the GNU Public License. See file README.TXT for
+    details.
+    
+    Copyright (c) Jens Gulden 2002, amoda@jensgulden.de
+    
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!ELEMENT application (metadata?,options?,members?)>
+<!ATTLIST application
+    version CDATA #REQUIRED
+  >
+
+<!-- Langstring - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!-- By encapsulating language dependant strings into tag <langstring
+     lang="..">, AMODA is prepared for internationalization. It is up to
+     the ApplicationEnvironment's implementations how to handle multiple
+     languages.                                                           -->
+<!ELEMENT langstring (#PCDATA)>
+<!ATTLIST langstring
+    lang CDATA #IMPLIED
+  >
+
+<!-- Metadata - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  
+<!ELEMENT metadata (title|name|longname|version|author|description|license|license-message)*> <!-- single occurrence of each element only, but in free order -->
+
+<!ELEMENT title (langstring)*>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT longname (langstring)*>
+<!ELEMENT version (#PCDATA)>
+<!ELEMENT author (#PCDATA)>
+<!ELEMENT email (#PCDATA)>
+<!ELEMENT copyright (langstring)*>
+<!ELEMENT description (langstring)*>
+<!ELEMENT license (#PCDATA)>
+<!ELEMENT license-message (langstring)*>
+
+<!-- Options - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  
+<!ELEMENT options (option|options-group)*>
+
+<!ELEMENT option (type|default-value|description)*> <!-- single occurrence of each element only, but in free order -->
+<!ATTLIST option
+    id ID #REQUIRED
+  >
+
+<!ELEMENT options-group (option)*>
+<!ATTLIST options-group
+    id ID #REQUIRED
+  >
+
+<!-- Type of the option, this must match a fully qualified Java class, 
+     e.g. java.io.File. Default is java.lang.String.                       -->
+<!ELEMENT type (#PCDATA)>
+
+<!ELEMENT default-value (#PCDATA)>
+  
+<!-- Members - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+  
+<!ELEMENT members (command|message)*>
+
+<!ELEMENT command EMPTY>
+<!ATTLIST command
+    id ID #REQUIRED
+    code CDATA #IMPLIED
+  >
+
+<!ELEMENT message (title?,text)>
+<!ATTLIST message
+    id ID #REQUIRED
+  >
+
+<!ELEMENT text (langstring)*>
+

@@ -1,92 +1,128 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
 	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
 	<TITLE>BeautyJ - Customizable Java Source Code Transformer</TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.0  (Linux)">
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.1.1  (Linux)">
 	<META NAME="AUTHOR" CONTENT="Jens Gulden">
+	<META NAME="CREATED" CONTENT="20021027;17311800">
+	<META NAME="CHANGEDBY" CONTENT="Jens Gulden">
+	<META NAME="CHANGED" CONTENT="20040928;17454900">
+	<STYLE>
+	<!--
+		@page { size: 21cm 29.7cm; margin: 2cm }
+		P { margin-bottom: 0.21cm; text-align: justify; page-break-before: auto }
+		H1 { margin-bottom: 0.21cm }
+		H1.western { font-family: "Times", serif; font-size: 18pt }
+		H1.cjk { font-size: 16pt }
+		H1.ctl { font-size: 16pt }
+		H2 { margin-top: 0.42cm; margin-bottom: 0.21cm }
+		H2.western { font-family: "Times", serif; font-size: 16pt; font-style: normal }
+		H2.cjk { font-family: "HG Mincho Light J"; font-size: 14pt; font-style: italic }
+		H2.ctl { font-family: "Arial Unicode MS"; font-size: 14pt; font-style: italic }
+		H3 { margin-top: 0.42cm; margin-bottom: 0.16cm }
+		H3.western { font-family: "Times", serif }
+		H3.cjk { font-family: "HG Mincho Light J" }
+		H3.ctl { font-family: "Arial Unicode MS" }
+		TD P { margin-bottom: 0.21cm; text-align: justify; page-break-before: auto }
+		CODE { font-family: "Cumberland", monospace }
+	-->
+	</STYLE>
 </HEAD>
-<BODY LANG="de-DE">
-<H1>BeautyJ &ndash; Customizable Java Source Code Transformer <BR>&amp;
-Sourclet API with Java Source Code Parser API</H1>
+<BODY LANG="en-US" DIR="LTR">
+<H1 CLASS="western">BeautyJ &ndash; Customizable Java Source Code
+Transformer <BR>&amp; Sourclet API with Java Source API</H1>
 <P STYLE="font-style: normal">Normalizes Java source code to a clean
 structured format, customizable through the Sourclet
 API.<BR>Auto-generates Javadoc comments using semantic information
 from identifier names.<BR>Converts Java source code to XJava XML and
-back.<BR>Contains the Java Source Code Parser API to integrate Java
-source code parsing into any program.</P>
-<P STYLE="margin-bottom: 0cm">Version 1.0. Copyright &copy; Jens
-Gulden<SPAN STYLE="text-decoration: none">,
+back.<BR>Contains the Java Source API to integrate Java source code
+parsing into any program.</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; page-break-before: auto">Version
+1.1. Copyright &copy; Jens Gulden<SPAN STYLE="text-decoration: none">,
 </SPAN><A HREF="http://www.jensgulden.de/"><U>www.jensgulden.de</U></A>.<BR>Distributed
 under the <A HREF="http://www.gnu.org/copyleft/gpl.html" TARGET="_blank">GNU
 General Public License (GPL)</A>.</P>
-<P STYLE="margin-bottom: 0cm">This software comes with NO WARRANTY.
-See file license.txt for details.</P>
-<P STYLE="margin-bottom: 0cm"><BR>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; page-break-before: auto">This
+software comes with NO WARRANTY. See file license.txt for details.</P>
+<P ALIGN=LEFT STYLE="margin-bottom: 0cm; page-break-before: auto"><BR>
 </P>
 <HR>
-<DIV ID="Inhaltsverzeichnis1" STYLE="background: transparent">
-	<DIV ID="Inhaltsverzeichnis1_Head">
-		<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4 STYLE="font-size: 16pt"><B>CONTENTS</B></FONT></FONT></P>
+<DIV ID="Inhaltsverzeichnis1" DIR="LTR" STYLE="background: transparent">
+	<DIV ID="Inhaltsverzeichnis1_Head" DIR="LTR">
+		<P ALIGN=LEFT STYLE="margin-top: 0.42cm; page-break-before: auto; page-break-after: avoid">
+		<FONT FACE="Times, serif"><FONT SIZE=4 STYLE="font-size: 16pt"><B>CONTENTS</B></FONT></FONT></P>
 	</DIV>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.1.SYNOPSIS|outline">SYNOPSIS</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.1.Description|outline">Description</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.1.Running BeautyJ|outline">Running
-	BeautyJ</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.2.Options|outline">Options</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.3.Boolean Option Syntax|outline">Boolean
-	Option Syntax</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.4.Loading Options from a File|outline">Loading
-	Options from a File</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.5.Complete List of Options|outline">Complete
-	List of Options</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.6.Java Sourclets|outline">Java
-	Sourclets</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.7.Developing your own Sourclets|outline">Developing
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.SYNOPSIS|outline">SYNOPSIS</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.1.Description|outline">Description</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.2.Running BeautyJ|outline">Running BeautyJ</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.3.Options|outline">Options</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.4.Javadoc auto-generation|outline">Javadoc
+	auto-generation</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.5.Loading Options from a File|outline">Loading Options
+	from a File</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.6.Complete List of Options|outline">Complete List of
+	Options</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.7.Java Sourclets|outline">Java Sourclets</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.8.Developing your own Sourclets|outline">Developing
 	your own Sourclets</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.1.8.Related Documentation|outline">Related
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.1.9.Related Documentation|outline">Related
 	Documentation</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.2.SOURCE FILES|outline">SOURCE
-	FILES</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.2.1.Java source code|outline">Java
-	source code</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.2.2.XJava XML|outline">XJava
-	XML</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.3.GENERATED FILES|outline">GENERATED
-	FILES</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.3.1.Java source code|outline">Java
-	source code</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.3.2.XJava XML|outline">XJava
-	XML</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.4.USAGE EXAMPLE|outline">USAGE
-	EXAMPLE</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.5.ENVIRONMENT|outline">ENVIRONMENT</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.5.1.Command Line Shell|outline">Command
-	Line Shell</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.5.2.ANT Task|outline">ANT
-	Task</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.5.3.Java Virtual Machine|outline">Java
-	Virtual Machine</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.5.4.Classpath|outline">Classpath</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.5.5.LIMITATIONS|outline">LIMITATIONS</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.6.REUSABILITY|outline">REUSABILITY</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.6.1.Java Source Code Parser API|outline">Java
-	Source Code Parser API</A>	</P>
-	<P STYLE="margin-left: 1cm; margin-bottom: 0cm"><A HREF="#0.6.2.AMODA Application Framework|outline">AMODA
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.2.SOURCE FILES|outline">SOURCE FILES</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.2.1.Java source code|outline">Java source code</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.2.2.XJava XML|outline">XJava XML</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.3.GENERATED FILES|outline">GENERATED FILES</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.3.1.Java source code|outline">Java source code</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.3.2.XJava XML|outline">XJava XML</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.4.USAGE EXAMPLES|outline">USAGE EXAMPLES</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.ENVIRONMENT|outline">ENVIRONMENT</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.1.Command Line Shell|outline">Command Line Shell</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.2.ANT Task|outline">ANT Task</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.3.Java Virtual Machine|outline">Java Virtual Machine</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.4.Classpath|outline">Classpath</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.5.5.LIMITATIONS|outline">LIMITATIONS</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.6.REUSABILITY|outline">REUSABILITY</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.6.1.Java Source API|outline">Java Source API</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 1cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.6.2.AMODA Application Framework|outline">AMODA
 	Application Framework</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.7.FUTURE PLANS|outline">FUTURE
-	PLANS</A>	</P>
-	<P STYLE="margin-left: 0.5cm; margin-bottom: 0cm"><A HREF="#0.8.SEE ALSO|outline">SEE
-	ALSO</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.7.FUTURE PLANS|outline">FUTURE PLANS</A>	</P>
+	<P ALIGN=LEFT STYLE="margin-left: 0.5cm; margin-bottom: 0cm; page-break-before: auto">
+	<A HREF="#0.8.SEE ALSO|outline">SEE ALSO</A>	</P>
 </DIV>
 <HR>
 <H2 CLASS="western"><A NAME="0.1.SYNOPSIS|outline"></A>SYNOPSIS</H2>
-<P><CODE>beautyj [-properties=<I>config-properties</I>] -d=<I>output-dir</I>
-[-sourclet=<I>Sourclet-class</I>] [-verbose] { <I>Sourclet-options</I>
-} { <I>source-files-or-dirs</I><SPAN STYLE="font-style: normal"> } |
--help</SPAN></CODE></P>
-<H3 CLASS="western"><A NAME="0.1.1.Running%20BeautyJ|outline"></A><A NAME="0.1.1.Description|outline"></A>
-Description</H3>
+<P ALIGN=LEFT><CODE>beautyj [-properties <I>config-properties</I>] -d
+<I>output-dir</I> <BR>[-sourclet <I>Sourclet-class</I>] [-verbose] {
+<I>Sourclet-options</I> } <BR>{ <I>source-files-or-dirs</I><SPAN STYLE="font-style: normal">
+} | -help</SPAN></CODE></P>
+<H3 CLASS="western"><A NAME="0.1.1.Description|outline"></A>Description</H3>
 <P><SPAN STYLE="font-style: normal"><B>BeautyJ </B><SPAN STYLE="font-weight: medium">parses
 Java source code</SPAN> and <SPAN STYLE="font-weight: medium">transforms</SPAN>
 it to different output<SPAN STYLE="font-weight: medium"> formats</SPAN>.
@@ -100,14 +136,14 @@ names. A</SPAN> standard project header can be attached to each file.</P>
 <P STYLE="font-weight: medium">The output is fully customizable
 through the <I>Sourclet API</I>.</P>
 <P STYLE="font-style: normal; font-weight: medium">The <I>Java Source
-Code Parser API</I> provides access to Java source code from any Java
-program, by parsing .java-files and representing their content in an
+API</I> provides access to Java source code from any Java program, by
+parsing .java-files and representing their source code content in an
 object-oriented structure.</P>
 <P><SPAN STYLE="font-style: normal">A </SPAN><A HREF="#USAGE EXAMPLE|outline"><U><SPAN STYLE="font-style: normal">usage
 example</SPAN></U></A><SPAN STYLE="font-style: normal"> is given at
 the end of this document.</SPAN></P>
 <H3 CLASS="western">Running BeautyJ</H3>
-<P>There are four alternative ways to start up BeautyJ:</P>
+<P>There are several alternative ways to start up BeautyJ:</P>
 <OL>
 	<LI><P>Use the shell wrapper script <CODE>beautyj.sh</CODE> (on
 	Unix-like systems) or <CODE>beautyj.bat</CODE> (on Windows). These
@@ -132,67 +168,64 @@ the end of this document.</SPAN></P>
 	<LI><P>BeautyJ can also be used as an ANT task to be included in ANT
 	build scripts. See the <A HREF="#ANT Task|outline">ANT Task</A>
 	documentation below.</P>
+	<LI><P>Each of the above ways of invoking can make use of the
+	'-gui'-option. Using this option, BeautyJ starts up with a graphical
+	user interface, which allows you to edit all available options and
+	start code beautification by hitting the 'Run'-button. <BR>Note that
+	this is not the most sophisticated graphical user interface because
+	it is automatically generated by the application framework BeautyJ
+	is built on. However, it provides a fully graphical overview of all
+	configurable options, which makes using BeautyJ much easier when you<FONT SIZE=3><FONT FACE="Times New Roman">
+	are not yet experienced in using it.</FONT></FONT></P>
 </OL>
-<H3 CLASS="western"><A NAME="0.1.3.Boolean%20Option%20Syntax|outline"></A><A NAME="0.1.2.Options|outline"></A>
-Options</H3>
+<H3 CLASS="western"><A NAME="0.1.3.Options|outline"></A>Options</H3>
 <P STYLE="font-style: normal">Options of the StandardSourclet are
-either of type string or type boolean.</P>
-<P><SPAN STYLE="font-style: normal"><B>String options</B> are
-specified using the syntax</SPAN></P>
-<P><CODE><SPAN STYLE="font-style: normal">-</SPAN><I>option-name</I><SPAN STYLE="font-style: normal">=</SPAN><I>option-value</I></CODE></P>
-<P STYLE="font-style: normal">for example,
-<CODE>-author.email=me@somesite.com</CODE>.</P>
+either of type String, File, Class, Int or Boolean.</P>
+<P><SPAN STYLE="font-style: normal"><B>String, File, Class and Int
+options</B> are specified using the syntax:</SPAN></P>
+<P ALIGN=JUSTIFY><CODE><SPAN STYLE="font-style: normal">-</SPAN><I>option-name</I>
+<I>option-value</I></CODE><SPAN STYLE="font-style: normal"> </SPAN>
+</P>
+<P ALIGN=JUSTIFY STYLE="font-style: normal">or</P>
+<P ALIGN=JUSTIFY STYLE="font-style: normal"><CODE><SPAN STYLE="font-style: normal">-</SPAN><I>option-name=option-value</I></CODE>
+(the '=' is optional).</P>
+<P STYLE="font-style: normal">For example: <CODE>-author.email
+me@somesite.com</CODE>.</P>
 <P STYLE="font-style: normal">Note that when string option values
-contain spaces, system dependant mechanisms to mark the blank
-character as part of the parameter need to be applied. For example,</P>
+contain spaces, system-dependent mechanisms to mark the blank
+character as part of the parameter need to be applied. For example,
+it is illegal to specify:</P>
 <P STYLE="font-style: normal"><CODE>-project.name=This is my project</CODE></P>
-<P STYLE="font-style: normal">is illegal. Instead, mark blank
-characters using something like</P>
-<P STYLE="font-style: normal"><CODE>-project.name=This\ is\ my\
+<P STYLE="font-style: normal">Instead, mark blank characters using</P>
+<P STYLE="font-style: normal"><CODE>-project.name This\ is\ my\
 project</CODE> (Linux)</P>
 <P STYLE="font-style: normal">or 
 </P>
-<P STYLE="font-style: normal"><CODE><SPAN STYLE="font-style: normal">&ldquo;-project.name=This
-is my project&rdquo;</SPAN></CODE><SPAN STYLE="font-style: normal">
+<P STYLE="font-style: normal"><CODE><SPAN STYLE="font-style: normal">-project.name
+&ldquo;This is my project&rdquo;</SPAN></CODE><SPAN STYLE="font-style: normal">
 (Windows)</SPAN></P>
 <P STYLE="font-style: normal">depending on your operating system.</P>
-<P><SPAN STYLE="font-style: normal">(Note: do not use
-</SPAN><CODE><SPAN STYLE="font-style: normal">-project.name=&rdquo;This
-is...<SPAN STYLE="text-decoration: none">&rdquo;</SPAN></SPAN></CODE><SPAN STYLE="font-style: normal"><SPAN STYLE="text-decoration: none">,
-the quotation marks need to enclose the whole parameter definition.</SPAN>)</SPAN></P>
 <P STYLE="font-style: normal"><B>Boolean options</B> can be specified
 in two ways:</P>
 <OL>
 	<LI><P><SPAN STYLE="font-style: normal">Set the option <B>directly</B>
 	by simply adding it to the list of parameters, for example (setting
-	the option's value implicitly to true):</SPAN></P>
+	the option's value implicitly to </SPAN><I>true</I><SPAN STYLE="font-style: normal">):</SPAN></P>
 	<P STYLE="font-style: normal"><CODE>-doc.method.description.param.create</CODE></P>
-	<P STYLE="font-style: normal">Boolean values can also be specified
-	explicitly, e.&nbsp;g.</P>
-	<P STYLE="font-style: normal"><CODE><SPAN STYLE="font-style: normal">-doc.method.description.param.create=yes<BR>-doc.fields.description.create=no</SPAN></CODE></P>
-	<LI><P><SPAN STYLE="font-style: normal">Alternatively, set <B>several
-	options at once</B> by grouping them hierarchically, for example</SPAN></P>
-	<P STYLE="font-style: normal"><CODE>-doc.method=create</CODE></P>
-	<P STYLE="font-style: normal">has the same effect as setting the
-	individual options</P>
-	<P><CODE><SPAN STYLE="font-style: normal">-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.description.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.dummy</SPAN><BR><SPAN STYLE="font-style: normal">-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.description.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.text</SPAN><BR><SPAN STYLE="font-style: normal">-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.throws.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.dummy<BR>-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.throws.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.text<BR>-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.param.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.dummy<BR>-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.param.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.text<BR>-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.return.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.dummy<BR>-</SPAN><I>doc.method</I><SPAN STYLE="font-style: normal">.return.</SPAN><I>create</I><SPAN STYLE="font-style: normal">.text</SPAN></CODE></P>
-	<P STYLE="font-style: normal">When hiearchically grouping boolean
-	options, any option whose name starts with the left-hand-side of the
-	equation sign and also contains the right-hand-side of the equation
-	sign as parts of its qualified name, will be set to true.</P>
-	<P STYLE="font-style: normal">With this syntax, sophisticated
-	configuration options can be expressed using only a small number of
-	parameters on the command-line.</P>
+	<LI><P STYLE="font-style: normal">Boolean values can also be
+	specified explicitly, e.&nbsp;g.</P>
+	<P><CODE><SPAN STYLE="font-style: normal">-doc.method.description.param.create=yes<BR>-doc.fields.description.create=no</SPAN></CODE></P>
 </OL>
-<H3 CLASS="western"><A NAME="0.1.4.Loading%20Options%20from%20a%20File|outline"></A>
-Boolean Option Syntax</H3>
-<P STYLE="font-style: normal">Those boolean options controlling the
+<P STYLE="font-style: normal">Either 'yes'/'no' or 'true'/'false'
+literals can be used to specify boolean values.</P>
+<H3 CLASS="western">Javadoc auto-generation</H3>
+<P STYLE="font-style: normal">Those options controlling the
 StandardSourclet's behaviour on how to handle Javadoc comments follow
-a defined syntax pattern, which is</P>
-<P STYLE="font-style: normal"><CODE>-<B>doc</B> .<I>sourceObjectType
-</I>.<I>javadocElementType </I>.<I>actionType </I>.<I>textType</I></CODE></P>
-<P><SPAN STYLE="font-style: normal">where the individual parts denote
-the followin</SPAN>g:</P>
+a common syntax pattern, which is:</P>
+<P STYLE="font-style: normal"><CODE>-<I>sourceObjectType</I>.<I>actionType</I>.<I>textType</I><SPAN STYLE="font-style: normal">
+= </SPAN><I>{ javadocElementType [,] }</I></CODE></P>
+<P><SPAN STYLE="font-style: normal">The individual parts denote the
+followin</SPAN>g:</P>
 <P><CODE><I>sourceObjectType </I>:= class | field | method</CODE></P>
 <P STYLE="font-style: normal">&ldquo;class&rdquo; refers to the
 single javadoc comment attached to the class definition, one per
@@ -203,22 +236,10 @@ class, that means declarations of variables and constants (final
 static variables in Java).</P>
 <P STYLE="font-style: normal">&ldquo;method&rdquo; refers to any
 method or constructor of the class.</P>
-<P><CODE><I>javadocElementType</I> := description | author | version</CODE>
- <BR>(if sourceObjectType:=&rdquo;class&rdquo;)</P>
-<P>or</P>
-<P><CODE><I>javadocElementType</I> := description | param | throws |
-return</CODE>  <BR>(if sourceObjectType:=&rdquo;method&rdquo;)</P>
-<P>or</P>
-<P><CODE><I>javadocElementType</I> := description</CODE>  <BR>(if
-sourceObjectType:=&rdquo;field&rdquo;)</P>
-<P>The Javadoc element type &ldquo;description&rdquo; refers to the
-text part of the Javadoc comment. &ldquo;Author&rdquo; and &ldquo;version&rdquo;
-are the corresponding Javadoc tags in the class documentation. For
-methods, tags @param, @throws and @return can also be specified.</P>
 <P><CODE><I>actionType</I> := create | remove</CODE></P>
-<P>&ldquo;Create&rdquo; adds auto-generated documentation fragments
-to the Javadoc comment, if no such fragment already exists or an
-existing one has been previously removed. 
+<P>The &ldquo;create&rdquo;-action adds auto-generated documentation
+fragments to the Javadoc comment, if no such fragment already exists
+or an existing one has been previously removed. 
 </P>
 <P>By setting &ldquo;remove&rdquo;, documentation-fragments may be
 removed. Using &ldquo;remove&rdquo; and &ldquo;create&rdquo; together
@@ -232,761 +253,545 @@ text-type &ldquo;empty&rdquo;.
 </P>
 <P>All those text elements containing the substring &ldquo;...&rdquo;
 are considered to be incomplete dummies. By specifying &rdquo;dummy&rdquo;,
-the StandardSourclet changes these dummy parts only. 
-</P>
-<P>&ldquo;Text&rdquo; refers to any documentation text.</P>
-<P>In most cases, one will use the hierarchic shortcut mechanism for
-boolean options (see above), and so choosing between creating
-dummy-comment-parts or text-comment-parts is usually skipped.
-Instead, specify for example <CODE>-doc=remove.dummy -doc=create</CODE>
-to let all dummy documentation fragments be removed and auto-generate
-any fragment that does not exist after clearing the dummies.</P>
-<H3 CLASS="western"><A NAME="0.1.5.Complete%20List%20of%20Options|outline"></A>
-Loading Options from a File</H3>
+the StandardSourclet changes these dummy parts only. &ldquo;Text&rdquo;
+refers to any documentation text.</P>
+<P><CODE><I>javadocElementType</I> := description | author | version</CODE>
+ <BR>(if sourceObjectType:=&rdquo;class&rdquo;)</P>
+<P>or <CODE><I>javadocElementType</I> := description | param | throws
+| return</CODE>  <BR>(if sourceObjectType:=&rdquo;method&rdquo;)</P>
+<P>or <CODE><I>javadocElementType</I> := description</CODE>  <BR>(if
+sourceObjectType:=&rdquo;field&rdquo;)</P>
+<P>The Javadoc element type &ldquo;description&rdquo; refers to the
+text part of the Javadoc comment. &ldquo;Author&rdquo; and &ldquo;version&rdquo;
+are the corresponding Javadoc tags in the class documentation. For
+methods, handling the tags 'param', 'throws' and 'return' can also be
+specified.</P>
+<H3 CLASS="western">Loading Options from a File</H3>
 <P>Default options can be loaded from a file instead of specifying
 them directly as parameters. A file that follows the simple Java
 Properties format (text lines with &ldquo;<I>key=value</I>&ldquo;
-entries) can be specified using the paramater <CODE>-properties=<I>filename</I></CODE>.
-The values loaded from the file are treated as defaults, they can be
-overwritten by setting the option on the command-line.</P>
-<H3 CLASS="western"><A NAME="0.1.6.Java%20Sourclets|outline"></A>Complete
-List of Options</H3>
-<TABLE WIDTH=945 BORDER=0 CELLPADDING=2 CELLSPACING=0>
+entries) can be specified using the paramater <CODE>-properties
+<I>filename</I></CODE>. The values loaded from the file are treated
+as defaults, they can be overwritten by setting the option on the
+command-line.</P>
+<H3 CLASS="western">Complete List of Options</H3>
+<TABLE WIDTH=643 BORDER=0 CELLPADDING=2 CELLSPACING=0>
 	<COL WIDTH=4>
-	<COL WIDTH=933>
+	<COL WIDTH=630>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-d</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>The directory to output the beautified sources to.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-sourclet</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Full class name of the Sourclet to be used for generating
-			beautified class files. (Default:
-			de.gulden.util.javasource.sourclet.standard.StandardSourclet ) 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-d</B> or <B>-output-directory</B> [File] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>The directory to output the beautified sources to.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-sourclet</B> [Class] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Full class name of the Sourclet to be used for generating
+			beautified class files. (Default:
+			de.gulden.util.javasource.sourclet.standard.StandardSourclet) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-quiet</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>(Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-verbose</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>(Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-test</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>(Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-properties</B> [File] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630></TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-project.name</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>The project's name.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-project.version</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>The project's version number.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-project.date</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>The project's date. (Default: today ) 
+		<TD WIDTH=630>
+			<P>The project's date. (Default: today) 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-project.description</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Short description of the project.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-project.headerfile</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>A text file to insert as header comment (instead of
 			auto-building a header with project and author information).</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-author.name</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>The author's name.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-author.email</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>The author's email address.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.description.remove.dummy</B> [boolean] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-class.remove.dummy</B></P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove dummy content from a class-header's javadoc. Possible
+			values are (multiple possible, comma-seperated): description,
+			author, version 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-class.remove.empty</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.description.remove.empty</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove empty content from a class's javadoc comment. Possible
+			values are (multiple possible, comma-seperated): description,
+			author, version 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-class.remove.text</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.description.remove.text</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove any content from a class's javadoc comment. Possible
+			values are (multiple possible, comma-seperated): description,
+			author, version 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-class.create.dummy</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.description.create.dummy</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Create dummy content for a class's javadoc comment. Possible
+			values are (multiple possible, comma-seperated): description,
+			author, version 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description for a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-class.create.text</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.description.create.text</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Create auto-text content for a class's javadoc comment.
+			Possible values are (multiple possible, comma-seperated):
+			description, author, version 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description for a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-method.remove.dummy</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.author.remove.dummy</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove dummy content from a method's or constructor's javadoc
+			comment. Possible values are (multiple possible, comma-seperated):
+			description, param, return, throws 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy @author tag from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-method.remove.empty</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.author.remove.empty</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove empty content from a method's or constructor's javadoc
+			comment. Possible values are (multiple possible, comma-seperated):
+			description, param, return, throws 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty @author tag from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-method.remove.text</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.author.remove.text</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Remove any content from a method's or constructor's javadoc
+			comment. Possible values are (multiple possible, comma-seperated):
+			description, param, return, throws 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove @author tag from a class's javadoc comment.</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-method.create.dummy</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.author.create.dummy</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Create dummy content for a method's or constructor's javadoc
+			comment. Possible values are (multiple possible, comma-seperated):
+			description, param, return, throws 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy @author tag for a class's javadoc comment (can be
-			removed in subsequent runs using ...remove.dummy).</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-method.create.text</B></P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.author.create.text</B> [boolean] 
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Create auto-text content for a method's or constructor's
+			javadoc comment. Possible values are (multiple possible,
+			comma-seperated): description, param, return, throws 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create @author tag for a class's javadoc comment with the
-			author name set by option -author.name.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.version.remove.dummy</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-field.remove.dummy</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy text from a class's @version tag in the javadoc
-			comment.</P>
+		<TD WIDTH=630>
+			<P>Remove dummy description from a field's javadoc comment, if set
+			to 'description'.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.version.remove.empty</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty @version tag from a class's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.version.remove.text</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-field.remove.empty</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove @version tag from a class's javadoc comment.</P>
+		<TD WIDTH=630>
+			<P>Remove empty description from a field's javadoc comment, if set
+			to 'description'.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.version.create.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create @version tag for a class's javadoc comment with dummy
-			entry (can be removed in subsequent runs using ...remove.dummy).</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.class.version.create.text</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-field.remove.text</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create @version tag for a class's javadoc comment with the
-			version set by option -version.</P>
+		<TD WIDTH=630>
+			<P>Remove any description from a field's javadoc comment, if set
+			to 'description'.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.description.remove.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a method's or constructor's
-			javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.description.remove.empty</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-field.create.dummy</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a method's or constructor's
-			javadoc comment.</P>
+		<TD WIDTH=630>
+			<P>Create dummy description for a field's javadoc comment, if set
+			to 'description'.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.description.remove.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a method's or constructor's javadoc
-			comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.description.create.dummy</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-field.create.text</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description for a method's or constructor's
-			javadoc comment.</P>
+		<TD WIDTH=630>
+			<P>Create auto-text description for a field's javadoc comment, if
+			set to 'description'.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.description.create.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description for a method's or constructor's
-			javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.param.remove.dummy</B> [boolean] 
-			</P>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-exception.texts</B></P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a method's or constructor's
-			@param tags.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.param.remove.empty</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a method's or constructor's
-			@param tags.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.param.remove.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a method's or constructor's @param
-			tags.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.param.create.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description for a method's or constructor's @param
-			tags.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.param.create.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description for a method's or constructor's
-			@param tags.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.return.remove.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a method's @return tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.return.remove.empty</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a method's @return tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.return.remove.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a method's @return tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.return.create.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description for a method's @return tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.return.create.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description for a method's @return tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.throws.remove.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a method's or constructor's
-			@throws tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.throws.remove.empty</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a method's or constructor's
-			@throws tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.throws.remove.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a method's or constructor's @throws
-			tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.throws.create.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description from a method's or constructor's
-			@throws tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.method.throws.create.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description from a method's or constructor's
-			@throws tag.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.field.description.remove.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove dummy description from a field's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.field.description.remove.empty</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove empty description from a field's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.field.description.remove.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Remove any description from a field's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.field.description.create.dummy</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create dummy description for a field's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.field.description.create.text</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Create auto-text description for a field's javadoc comment.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-doc.exception.text</B></P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Sets default comment texts for thrown exceptions. The default
 			values need not to be repeated if you want them leave unchanged
 			and add some more. Example: 'MalformedURLException=if the url is
 			not legal,NumberFormatException=if the string does not represent a
-			number'.&quot; (Default: IOException=if an i/o error occurs,
-			SQLException=if a database error occurs, SAXException = if an XML
-			parser error occurs ) 
-			</P>
+			number'.&quot;</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-code.clean</B> [boolean] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-b</B> or <B>-code.braces.linebreak</B> [boolean] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
+			<P>Choose between a code formatting style that outputs a
+			line-break before the first starting curly brace ( '{' ) of a
+			method (if set to true), or output it at the end of the method's
+			declaring line (if set to false). (Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-c</B> or <B>-code.clean</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
 			<P>Remove out-commented dead lines of code from the inner method
 			bodies. Every line that starts with '//' and ends with ';', '{' or
-			'}' will be removed. (Default: false ) 
+			'}' will be removed. (Default: false) 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-code.qualify</B> [boolean] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Use fully qualified class names in the generated output. (E.g.
-			use 'java.lang.String' instead of 'String'.) This might be needed
-			in order to avoid ambiguity in class names. Usually, the classes
-			and interfaces used in member signatures are declared by import
-			statements. (Default: false ) 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-code.separators</B> [boolean] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Insert comment blocks between different types of class members.
-			This highly increases readabilty. (Default: true ) 
+			This highly increases readabilty. (Default: true) 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-code.format</B> [boolean] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-code.preserve.fields.order</B> [boolean] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
+			<P>Preserve the order of field declarations as they are given in
+			the orignal source file. In some cases this might be necessary to
+			avoid illegal forward references when compiling the beautified
+			sources. (Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-f</B> or <B>-code.format</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
 			<P>Format code blocks by auto-indenting the lines to a normalized
-			standard-representation. (Default: false ) 
+			standard-representation. (Default: false) 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-code.indent.spaces</B> [int] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-i</B> or <B>-code.indent.spaces</B> [int] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Sets the number of spaces with which auto-indentation gets
-			performed. (Default: 4 ) 
+			performed. (Default: 4) 
 			</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-xml.in</B> [java.io.File] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-q</B> or <B>-code.qualify</B> [boolean] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
+			<P>Use fully qualified class names in the generated output. (E.g.
+			use 'java.lang.String' instead of 'String'.) This might be needed
+			in order to avoid ambiguity in class names. Usually, the classes
+			and interfaces used in member signatures are declared by import
+			statements. (Default: false) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-code.qualify.auto</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>If option -code.qualify is disabled (which is default), fully
+			qualifiy those class-names which would otherwise be
+			unqualifiyable. (Default: true) 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-xml.in</B> [File] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
 			<P>Read Java source from XML file, not from .java-files. Then
 			beautify and output as .java-files. Use &quot;-xml.in=&quot;
 			without specifying a file name to read from standard in.</P>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-xml.validate</B> [boolean] 
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-xml.out</B> [File] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
-			<P>Validate the input XML against its DTD before parsing. The
-			input file must contain a &lt;!DOCTYPE ..&gt; declaration. Can be
-			used only in combination with -xml.in.</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=2 WIDTH=941>
-			<P><B>-xml.out</B> [java.io.File] 
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Parse Java source and create XML file, without performing any
 			beautification. Use &quot;-xml.out=&quot; without specifying a
 			file name to write to standard out, in this case option -quiet is
@@ -994,21 +799,34 @@ List of Options</H3>
 		</TD>
 	</TR>
 	<TR>
-		<TD COLSPAN=2 WIDTH=941>
+		<TD COLSPAN=2 WIDTH=639>
+			<P><B>-xml.validate</B> [boolean] 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD WIDTH=4></TD>
+		<TD WIDTH=630>
+			<P>Validate the input XML against its DTD before parsing. The
+			input file must contain a &lt;!DOCTYPE ..&gt; declaration. Can be
+			used only in combination with -xml.in.</P>
+		</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=2 WIDTH=639>
 			<P><B>-xml.doctype</B> [boolean] 
 			</P>
 		</TD>
 	</TR>
 	<TR>
 		<TD WIDTH=4></TD>
-		<TD WIDTH=933>
+		<TD WIDTH=630>
 			<P>Include a &lt;!DOCTYPE ..&gt; reference into generated XML. Can
 			be used only in combination with -xml.out.</P>
 		</TD>
 	</TR>
 </TABLE>
-<H3 CLASS="western"><A NAME="0.1.7.Developing%20your%20own%20Sourclets|outline"></A>
-Java Sourclets</H3>
+<H3 CLASS="western">Java Sourclets</H3>
 <P STYLE="font-style: normal"><SPAN STYLE="font-weight: medium">A
 </SPAN><B>Sourclet</B> generates a cleaned-up version of the code and
 (optionally) some auto-generated Javadoc information. The result is
@@ -1021,8 +839,7 @@ code. (Note that BeautyJ's standard Sourclet does not format the
 instruction-code inside method-bodies. In contrast, it cares about
 the overall organization of fields, constructors, methods and their
 Javadoc information inside a Java source code file.)</P>
-<H3 CLASS="western"><A NAME="0.1.8.Related%20Documentation|outline"></A>
-Developing your own Sourclets</H3>
+<H3 CLASS="western">Developing your own Sourclets</H3>
 <P>A Sourclet is any Java class that implements the
 Sourclet-interface <CODE>de.gulden.util.&shy;javasource.sourclet.Sourclet</CODE>
 . Any Sourclet can be passed to BeautyJ using the <CODE>-sourclet</CODE>
@@ -1065,10 +882,8 @@ API documentation</U></A>.</P>
 BeautyJ is built on, see the <A HREF="http://amoda.berlios.de/" TARGET="_blank"><U>AMODA
 project homepage</U></A>. (You do not need to know about AMODA in
 order to develop your own Sourclet.)</P>
-<H2 CLASS="western"><A NAME="0.2.SOURCE%20FILES|outline"></A>SOURCE
-FILES</H2>
-<H3 CLASS="western"><A NAME="0.2.1.Java%20source%20code|outline"></A>Java
-source code</H3>
+<H2 CLASS="western">SOURCE FILES</H2>
+<H3 CLASS="western">Java source code</H3>
 <P STYLE="font-style: normal">To parse .java-files as input (normal
 use), specify any number of directories or files as command-line
 parameters after the options.</P>
@@ -1078,7 +893,8 @@ member declarations or Javadoc information will stop beautification.
 (However, errors inside method-bodies (the actual program code)
 should not confuse BeautyJ.) For more details about supported Java
 constructs and language versions see <A HREF="#LIMITATIONS|outline"><U>Limitations</U></A>.</P>
-<H3 CLASS="western"><A NAME="0.2.2.XJava%20XML|outline"></A>XJava XML</H3>
+<H3 CLASS="western"><A NAME="0.1.9.Related%20Documentation|outline"></A><A NAME="0.1.8.Developing%20your%20own%20Sourclets|outline"></A><A NAME="0.1.7.Java%20Sourclets|outline"></A><A NAME="0.1.6.Complete%20List%20of%20Options|outline"></A><A NAME="0.1.5.Loading%20Options%20from%20a%20File|outline"></A><A NAME="0.1.4.Javadoc%20auto-generation|outline"></A><A NAME="0.1.2.Running%20BeautyJ|outline"></A>
+XJava XML</H3>
 <P><SPAN STYLE="font-style: normal">An XJava file contains a
 normalized representation of any number of packages, interfaces,
 classes, their members and the according javadoc documentation
@@ -1088,176 +904,66 @@ Files</SPAN></A><SPAN STYLE="font-style: normal">.</SPAN></P>
 <P><SPAN STYLE="font-style: normal">To read Java source from XJava
 XML, use option &ldquo;</SPAN><CODE><SPAN STYLE="font-style: normal">-xml.in=</SPAN><I>file</I></CODE><SPAN STYLE="font-style: normal">&rdquo;.</SPAN>
 Specify<SPAN STYLE="font-style: normal"> &ldquo;</SPAN><CODE><SPAN STYLE="font-style: normal">-xml.in=</SPAN></CODE><SPAN STYLE="font-style: normal">&rdquo;
-to read XJava from the standard input stream.</SPAN></P>
-<H2 CLASS="western"><A NAME="0.3.GENERATED%20FILES|outline"></A>GENERATED
+(setting an empty parameter value) to read XJava from the standard
+input stream.</SPAN></P>
+<H2 CLASS="western"><A NAME="0.2.SOURCE%20FILES|outline"></A>GENERATED
 FILES</H2>
-<H3 CLASS="western"><A NAME="0.3.1.Java%20source%20code|outline"></A>Java
+<H3 CLASS="western"><A NAME="0.2.1.Java%20source%20code|outline"></A>Java
 source code</H3>
 <P STYLE="font-style: normal">When beautifying existing code, the
 usual output format is .java source-files that can then be compiled
 or further edited. 
 </P>
 <P STYLE="font-style: normal">The directory where to output the
-generated source files must be specified using option <CODE>-d=<I>directory</I></CODE>.
+generated source files must be specified using option <CODE>-d&nbsp;<I>directory</I></CODE>.
 </P>
 <P STYLE="font-style: normal">(Note that BeautyJ will rebuild one
 seperate .java-file for each class. If some of the original source
 files contain multiple classes in a single .java-file, the number of
 generated files will differ from the number of input files.)</P>
-<H3 CLASS="western"><A NAME="0.3.2.XJava%20XML|outline"></A>XJava XML</H3>
+<H3 CLASS="western"><A NAME="0.2.2.XJava%20XML|outline"></A>XJava XML</H3>
 <P STYLE="font-style: normal">Instead of beautifying code, BeautyJ
 can also generate an XML reperesentation of one or multiple Java
 source files. Such an XML file can be transformed externally in any
 possible way, and then be fed back to BeautyJ's beautification
-process using option -cml-input (see Source Files).</P>
+process using option -xml.input (see Source Files).</P>
 <P STYLE="font-style: normal">To create XJava output, use option
-&ldquo;<CODE><SPAN STYLE="font-style: normal">-xml.out=</SPAN><I>file</I></CODE><SPAN STYLE="font-style: normal">&rdquo;.</SPAN>
+&ldquo;<CODE><SPAN STYLE="font-style: normal">-xml.out </SPAN><I>file</I></CODE><SPAN STYLE="font-style: normal">&rdquo;.</SPAN>
 Specify &ldquo;<CODE><SPAN STYLE="font-style: normal">-xml.out=</SPAN></CODE><SPAN STYLE="font-style: normal">&rdquo;
-to write XJava to the standard output stream.</SPAN></P>
+</SPAN>(setting an empty parameter value) to write XJava to the
+standard output stream.</P>
 <P STYLE="font-style: normal">(Note that when XJava is created, no
 beautification will be performed. The Sourclet will not even be
 loaded by BeautyJ in this mode of operation.)</P>
-<H2 CLASS="western" STYLE="font-style: normal"><A NAME="0.4.USAGE%20EXAMPLE|outline"></A>
-USAGE EXAMPLE</H2>
-<P STYLE="font-style: normal">The following example parses file
+<H2 CLASS="western" STYLE="font-style: normal"><A NAME="0.3.2.XJava%20XML|outline"></A><A NAME="0.3.1.Java%20source%20code|outline"></A><A NAME="0.3.GENERATED%20FILES|outline"></A>
+USAGE EXAMPLES</H2>
+<P STYLE="font-style: normal">The following example parses the file
 /e/projects/beautyj/example/MyTestClass.java and outputs a beautified
 version into directory /e/projects/beautyj/example/beautified:</P>
-<P><CODE><SPAN STYLE="font-weight: medium"><FONT SIZE=3>java -jar
-beautyJ.jar &quot;-project.name=This Is My Test Class&quot;
+<P ALIGN=LEFT><CODE><SPAN STYLE="font-weight: medium"><FONT SIZE=3>java
+-jar beautyj.jar &quot;-project.name=This Is My Test Class&quot;
 -project.version=0.8.15 &quot;-author.name=Toby Tester&quot;
--author.email=t.tester@somesite.com -doc=create -code.clean
--d=/e/projects/beautyj/example/beautified
-/e/projects/beautyj/example/MyTestClass.java</FONT></SPAN></CODE></P>
-<P>(Note that setting option <CODE>-doc=create</CODE> is a
-hierarchical shortcut for setting all of the following options:</P>
-<TABLE WIDTH=642 BORDER=0 CELLPADDING=2 CELLSPACING=0>
-	<COL WIDTH=638>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.description.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.description.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.author.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.author.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.version.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.class.version.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.description.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.description.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.param.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.param.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.return.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.return.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.throws.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.method.throws.<I>create</I>.text
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.field.description.<I>create</I>.dummy
-			 </CODE>
-			</P>
-		</TD>
-	</TR>
-	<TR>
-		<TD WIDTH=638>
-			<P STYLE="font-style: normal; font-weight: medium"><CODE>-<I>doc</I>.field.description.<I>create</I>.text</CODE></P>
-		</TD>
-	</TR>
-</TABLE>
-<P>Using this shortcut mechanism, it is also possible to set options
-in a more specific way, for example <CODE>-doc.class=create 
--doc.method.param=remove</CODE>.)</P>
+<BR>-author.email=t.tester@somesite.com <BR>-class.create.text
+description,author -method.create.text
+description,param,throws,return -field.create.text <BR>-code.clean
+<BR>-d=/e/projects/beautyj/example/beautified
+<BR>/e/projects/beautyj/example/MyTestClass.java</FONT></SPAN></CODE></P>
 <P>The next example creates an XJava XML file from all sources
 recursively found in the ./src directory:</P>
 <P><CODE><SPAN STYLE="font-weight: medium"><FONT SIZE=3>java -jar
-beautyJ.jar -xml.out=/tmp/beautyJ.xml ./src</FONT></SPAN></CODE></P>
-<H2 CLASS="western"><A NAME="0.5.ENVIRONMENT|outline"></A>ENVIRONMENT</H2>
-<H3 CLASS="western"><A NAME="0.5.1.Command%20Line%20Shell|outline"></A>
-Command Line Shell</H3>
+beautyj.jar -xml.out=/tmp/beautyJ.xml ./src</FONT></SPAN></CODE></P>
+<P>This runs BeautyJ with an simple graphical user interface, making
+it easy to get a complete overview of the availbale options:</P>
+<P><CODE><SPAN STYLE="font-weight: medium"><FONT SIZE=3>java -jar
+beautyj.jar -gui</FONT></SPAN></CODE></P>
+<H2 CLASS="western"><A NAME="0.5.ENVIRONMENT|outline"></A><A NAME="0.4.USAGE%20EXAMPLES|outline"></A>
+ENVIRONMENT</H2>
+<H3 CLASS="western">Command Line Shell</H3>
 <P>As a standalone application, BeautyJ is run from a command line
 shell by either directly invoking the main class
 de.gulden.application.beautyj.Main or the wrapper class beautyj. See
 <A HREF="#Running BeautyJ|outline">Running BeautyJ</A>.</P>
-<H3 CLASS="western"><A NAME="0.5.2.ANT%20Task|outline"></A>ANT Task</H3>
+<H3 CLASS="western">ANT Task</H3>
 <P>Another way to run BeautyJ is to use it from inside an ANT build
 script. To declare the <CODE>&lt;beautyj ..&gt;</CODE> tag, include
 the following element once in the script:</P>
@@ -1266,21 +972,24 @@ class=&rdquo;beautyjTask&rdquo;<BR>
 classpath=&rdquo;<I>beautyj_home</I>/beautyj.jar&rdquo;/&gt;</CODE></P>
 <P>Now BeautyJ can be used like any other ANT task inside a <CODE>&lt;target
 ..&gt; .. &lt;/target&gt;</CODE> block:</P>
-<P><CODE>&lt;beautyj project.name=&rdquo;testproject&rdquo; <BR>     
-   author.name=&rdquo;Toby Tester&rdquo; <BR>         doc=&rdquo;create&rdquo;&gt;<BR>
-   &lt;src path=&rdquo;/mydrive/project1/src&rdquo;/&gt;<BR>    &lt;src
+<P><CODE>&lt;beautyj project_name=&rdquo;testproject&rdquo; <BR>     
+   author_name=&rdquo;Toby Tester&rdquo; <BR>        
+class_create_text=&rdquo;description,author&rdquo;&gt;<BR>    &lt;src
+path=&rdquo;/mydrive/project1/src&rdquo;/&gt;<BR>    &lt;src
 path=&rdquo;/anotherdrive/project2/src&rdquo;/&gt;<BR>&lt;/beautyj&gt;</CODE></P>
+<P>Note that the parameter attributes inside the &lt;beautyj&gt;-tag
+are expected to be written with underscores ('_') instead of dots
+('.'), so any option <CODE>aaa.bbb.ccc</CODE> becomes <CODE>aaa_bbb_ccc</CODE>
+in ANT.</P>
 <P>For more information on how to use ANT, see the <A HREF="http://jakarta.apache.org/ant/manual/index.html"><U>ANT
 documentation</U></A>.</P>
-<H3 CLASS="western"><A NAME="0.5.3.Java%20Virtual%20Machine|outline"></A>
-Java Virtual Machine</H3>
+<H3 CLASS="western">Java Virtual Machine</H3>
 <P>BeautyJ runs on a Java 2 platform, version 1.3 or higher. A Java
 Runtime Environment (JRE) is sufficient (JSDK is not required). It
 should be possible to also run BeautyJ in a Java 1.1.x environment,
 if the classpath additionally contains implementations of the new
-collection-classes introduced in Java 2 (java.util.Collection,
-java.util.ArrayList, java.util.Iterator are used by BeautyJ's
-application framework AMODA).</P>
+collection-classes (java.util.Collection, java.util.ArrayList,
+java.util.Iterator) introduced in Java 2.</P>
 <H3 CLASS="western"><A NAME="0.5.4.Classpath|outline"></A>Classpath</H3>
 <P>The classpath must provide access to the following packages and
 their sub-packages:</P>
@@ -1289,8 +998,8 @@ their sub-packages:</P>
 	main application classes.</P>
 	<LI><P><CODE>de.gulden.util.javasource.sourclet</CODE><BR>The
 	Sourclet API.</P>
-	<LI><P><CODE>de.gulden.util.javasource</CODE><BR>The Java source
-	code parser API classes.</P>
+	<LI><P><CODE>de.gulden.util.javasource</CODE><BR>The Java Source API
+	classes.</P>
 	<LI><P><CODE>de.gulden.framework.amoda</CODE><BR>The application
 	framework classes used by BeautyJ, see <A HREF="http://amoda.berlios.de/" TARGET="_blank"><U>AMODA
 	&ndash; <I>A</I>bstract <I>Mod</I>eled <I>A</I>pplication Framework</U></A>.
@@ -1317,43 +1026,28 @@ the ANT classes as part of the classpath-attribute in the <CODE>&lt;taskdef
 LIMITATIONS</H3>
 <P>Some limitations and bugs apply to the current version:</P>
 <UL>
-	<LI><P>The Java source parser causes problems with constant
-	Unicode-characters, like e.&nbsp;g. <CODE>'\u0123'</CODE>. For use
-	with BeautyJ, use <CODE>(char)123</CODE> as a workaround.</P>
-	<LI><P>Java allows some strange freedom in declaring arrays.
-	According to the <A HREF="http://java.sun.com/docs/books/jls/second_edition/html/arrays.doc.html#17235" TARGET="_blank"><U>Java
-	language specification, Chapter 10.2</U></A>, all three of the
-	following declarations are valid and share the same semantics:<BR>1.
-	<CODE>public String[][] twoDimString;</CODE><BR>2. <CODE>public
-	String twoDimString[][];<BR></CODE>3. <CODE>public String[]
-	twoDimString[];</CODE> (!)<CODE><BR></CODE>It is not tested whether
-	the Java source parser supports syntax 2) or 3), syntax 1) is
-	recommended for use with BeautyJ.</P>
-	<LI><P>Some uncommon Javadoc tags, especially those introduced after
-	JDK 1.3, may cause the parser to fail. However, it should not be
-	hard to extend the source code by the appropriate tag names. For
-	more information on Javadoc tags supported by the current version of
-	Sun's JSDK, see the <A HREF="http://java.sun.com/j2se/javadoc/"><U>Javadoc
-	tool documentation</U></A>.</P>
+	<LI><P>Line-indentation inside Javadoc-comments is not preserved.
+	All lines will start at the left, no matter what their original
+	indentation is (this may affect those Javadoc-comments that e.&nbsp;g.
+	contain source code examples).</P>
 </UL>
 <H2 CLASS="western"><A NAME="0.6.REUSABILITY|outline"></A>REUSABILITY</H2>
-<H3 CLASS="western"><A NAME="0.6.1.Java%20Source%20Code%20Parser%20API|outline"></A>
-Java Source Code Parser API</H3>
+<H3 CLASS="western"><A NAME="0.5.1.Command%20Line%20Shell|outline"></A>
+Java Source API</H3>
 <P>BeautyJ has been built on a reusable modular framework. The
-<SPAN STYLE="font-weight: medium">Sourclet API with the Java source
-code parser API</SPAN> can be applied as an independent library to
-access Java sources from any Java application. For detailled
-information, refer to the <A HREF="http://beautyj.berlios.de/api/index.html">Javadoc
-API documentation</A> of package <CODE>de.gulden.util.javasource</CODE>.
+<SPAN STYLE="font-weight: medium">Sourclet API with the Java Source
+API</SPAN> can be applied as an independent library to access Java
+sources from any Java application. For detailled information, refer
+to the <A HREF="http://beautyj.berlios.de/api/index.html">Javadoc API
+documentation</A> of package <CODE>de.gulden.util.javasource</CODE>. 
 </P>
-<P>The Java source code parser API has been developed using <A HREF="http://www.webgain.com/products/java_cc/" TARGET="_blank">JavaCC
+<P>The Java Source API has been developed using <A HREF="http://www.webgain.com/products/java_cc/" TARGET="_blank">JavaCC
 2.0</A>. The JavaCC source input files  <CODE>Parser.jjt</CODE> and
 <CODE>JavadocParser.jjt</CODE> are included in the distribution.
 (Note: the JavaCC libraries are <SPAN STYLE="font-style: normal">not</SPAN>
-required to run BeautyJ or the Java source code parser API, as JavaCC
-generates source files at compile-time and is not invoked at
-run-time.)</P>
-<H3 CLASS="western"><A NAME="0.6.2.AMODA%20Application%20Framework|outline"></A>
+required to run BeautyJ or the Java Source API, as JavaCC generates
+source files at compile-time and is not invoked at run-time.)</P>
+<H3 CLASS="western"><A NAME="0.5.3.Java%20Virtual%20Machine|outline"></A><A NAME="0.5.2.ANT%20Task|outline"></A>
 AMODA Application Framework</H3>
 <P>The BeautyJ application is developed on top of the <A HREF="http://amoda.berlios.de/" TARGET="_blank">AMODA
 &ndash; Abstract Modeled Application framework</A> by the same
@@ -1373,12 +1067,13 @@ being runnable both as a standalone command-line application and as
 an ANT task without caring about this in BeautyJ's implementation.</P>
 <P>BeautyJ's source codes serve as an example for developing new
 applications on top of AMODA.</P>
-<H2 CLASS="western"><A NAME="0.7.FUTURE%20PLANS|outline"></A>FUTURE
-PLANS</H2>
+<H2 CLASS="western"><A NAME="0.6.2.AMODA%20Application%20Framework|outline"></A><A NAME="0.6.1.Java%20Source%20API|outline"></A>
+FUTURE PLANS</H2>
 <UL>
 	<LI><P>It would be nice to see BeautyJ become a module for
-	integration into <A HREF="http://www.netbeans.org/" TARGET="_blank"><U>NetBeans</U></A>
-	and other OpenSource development tools. 
+	integration into <A HREF="http://www.netbeans.org/" TARGET="_blank"><U>NetBeans</U></A>,
+	<A HREF="http://www.eclipse.org/" TARGET="_blank">Eclipse</A> or
+	other OpenSource development tools. 
 	</P>
 	<LI><P STYLE="text-decoration: none"><FONT SIZE=3>Formatting of
 	inner method bodies should be improved. This could be achieved by
@@ -1388,7 +1083,8 @@ PLANS</H2>
 	more options similar to -doc.exception.text that allow specifying
 	pre-defined text-fragments for auto-commenting.</FONT></P>
 </UL>
-<H2 CLASS="western"><A NAME="0.8.SEE%20ALSO|outline"></A>SEE ALSO</H2>
+<H2 CLASS="western"><A NAME="0.8.SEE%20ALSO|outline"></A><A NAME="0.7.FUTURE%20PLANS|outline"></A>
+SEE ALSO</H2>
 <P STYLE="text-decoration: none"><A HREF="http://java.sun.com/docs/books/jls/second_edition/html/j.title.doc.html" TARGET="_blank">The
 Java Language Specification</A></P>
 <P><U><A HREF="http://www.webgain.com/products/java_cc/" TARGET="_blank">JavaCC
@@ -1402,6 +1098,6 @@ Abstract Modeled Application Framework</A></U></P>
 <P ALIGN=CENTER><FONT SIZE=2>Please send comments to:
 <A HREF="mailto:beautyJ@jensgulden.de" TARGET="_blank"><U>beautyJ@jensgulden.de</U></A></FONT></P>
 <P ALIGN=CENTER><FONT SIZE=2>Copyright &copy; <A HREF="http://www.jensgulden.de/" TARGET="_blank"><U>Jens
-Gulden</U></A> 2002</FONT></P>
+Gulden</U></A> 2002-2004</FONT></P>
 </BODY>
 </HTML>

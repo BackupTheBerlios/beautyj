@@ -1,0 +1,286 @@
+<?xml version="1.0"?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- ANT build script for BeautyJ                                          -->
+<!--                                                                       -->
+<!-- This also serves as an example of how to use BeautyJ from inside ANT. -->
+<!--                                                                       -->
+<!-- To run this, you additionally need                                    -->
+<!--                                                                       -->
+<!--     - ANT 1.4.1 (http://jakarta.apache.org/ant/index.html)            -->
+<!--     - JavaCC 2.0 (http://www.webgain.com/products/java_cc/)           -->
+<!--     - AMODA 0.1 (http://amoda.berlios.de/)                            -->
+<!--                                                                       -->
+<!-- Other versions may or may not work.                                   -->
+<!--                                                                       -->
+<!-- Copyright (c) Jens Gulden 2002, www.jensgulden.de                     -->
+<!--                                                                       -->
+<!-- Licensed under the GNU General Public License (GPL).                  -->
+<!-- This comes with NO WARRANTY, see file license.txt.                    -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!-- IMPORTANT: don't forget to adopt all paths to your configuration -->
+
+<project name="beautyj" basedir="/e/projects/beautyj/" default="all">
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         This is the taskdef-element which makes BeautyJ known to ANT.
+         (Note that the classpath-attribute will usually point to beautyj.jar,
+         here it is special to point directly to the manually compiled
+         development classes.)
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <taskdef name="beautyj" classname="beautyjTask" classpath="/e/projects/beautyj/src:/e/projects/amoda/lib/amoda.jar"/>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Set global project properties and create temp-dirs to build distribution in.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+        <property name="version_major" value="1"/>
+        <property name="version_minor" value="0"/>
+        <property name="project_version" value="${version_major}.${version_minor}"/>
+        <property name="release_filename" value="beautyJ-${version_major}_${version_minor}"/>
+        <property name="build" value="/tmp/beautyjmake/${release_filename}"/> <!-- temporary directory where distribution is being built in, single directory inside build directory to later zip it with correct pathname -->
+        <property name="beautyj_home" value="/e/projects/beautyj/"/>
+        <property name="amoda_jar" value="/e/projects/amoda/lib/amoda.jar"/>
+        <property name="javacc_home" value="/e/java/javacc2.0/bin/lib/"/>
+        <property name="xerces_home" value="/e/java/xerces-2_2_0/"/>
+        <property name="ant_jar" value="/usr/java/netbeans/modules/ext/ant-1.4.1.jar"/>
+
+        <delete dir="${build}/.." failonerror="no"/>
+        <mkdir dir="${build}/.."/>
+        <mkdir dir="${build}"/>
+        <mkdir dir="${build}/bin"/>
+        <mkdir dir="${build}/src"/>
+        <mkdir dir="${build}/doc"/>
+        <mkdir dir="${build}/lib"/>
+        <mkdir dir="${build}/make"/>
+        <mkdir dir="${build}/classes"/> <!-- temporary, will be removed before creating distribution archive -->
+
+        <copy todir="${build}/lib">
+          <fileset dir="${xerces_home}" >
+            <include name="license"/>
+            <include name="Readme.html"/>
+            <include name="xercesImpl.jar"/>
+            <include name="xmlParserAPIs.jar"/>
+          </fileset>
+        </copy>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Compile JavaCC sources to create the source code parser.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="javacc" depends="init">
+        <jjtree target="src/de/gulden/util/javasource/jjt/Parser.jjt" javacchome="${javacc_home}"/> <!-- attribute outputdirectory="src/de/gulden/util/javasource/jjt" is implicit -->
+        <jjtree target="src/de/gulden/util/javasource/jjt/JavadocParser.jjt" javacchome="${javacc_home}"/>
+        <javacc target="src/de/gulden/util/javasource/jjt/Parser.jj" javacchome="${javacc_home}"/>
+        <javacc target="src/de/gulden/util/javasource/jjt/JavadocParser.jj" javacchome="${javacc_home}"/>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Apply BeautyJ to itself, beautify BeautyJ's sources.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="beautyj" depends="init,javacc">
+
+        <beautyj d="${build}/src"
+                 project.name="BeautyJ - Customizable Java Source Code Transformer"
+                 project.version="${project_version}"
+                 project.description="Note:    Contains auto-generated Javadoc comments created by BeautyJ.\n \nThis is licensed under the GNU General Public License (GPL)\nand comes with NO WARRANTY. See file license.txt for details."
+                 author.name="Jens Gulden"
+                 author.email="beautyj@jensgulden.de"
+                 code.clean="yes"
+                 doc="remove.dummy,description.create.text,throws.create.text"
+                 doc.class="create.text"
+                 verbose="yes">
+            <src path="src"/>
+        </beautyj>
+
+        <!-- copy internal configuration file application.xml, which is
+             loaded as resource from the classpath -->
+        <copy todir="${build}/src/de/gulden/application/beautyj">
+            <fileset dir="src/de/gulden/application/beautyj">
+               <include name="application.xml"/>
+               <include name="application.dtd"/>
+            </fileset>
+        </copy>
+
+        <!-- Overwrite package de.gulden.util.javasource.jjt, all .java-files
+             there are auto-generated and should be kept like that.
+             (Some methods use fully referenced class names in their signatures,
+             to keep them compilable after beautification, parameter
+             -code.reference=full would need to be set, or appropriate
+             import-statements would need to be added.) -->
+        <delete dir="${build}/src/de/gulden/util/javasource/jjt"/>
+        <copy todir="${build}/src/de/gulden/util/javasource">
+            <fileset dir="src/de/gulden/util/javasource">
+               <include name="jjt/**"/>
+               <exclude name="**/filesystem.attributes"/>
+            </fileset>
+        </copy>
+
+        <delete dir="${build}/src/test"/>
+
+        <delete dir="./srcBeautified" failonerror="yes"/>
+        <mkdir dir="./srcBeautified"/>
+        <copy todir="./srcBeautified">
+            <fileset dir="${build}/src">
+            </fileset>
+        </copy>
+
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Create examples.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="example" depends="beautyj">
+        <!-- create examples in original project dir and copy to distribution later -->
+        <!-- use BeautyJ to convert Java source to XML -->
+        <beautyj xml.out="${beautyj_home}/examples/beautyJ.xml" xml.doctype="no" verbose="yes">
+            <src path="${build}/src"/>
+        </beautyj>
+        <!-- DTD reference was not added, some parsers seem to always want to validate if a dtd reference exists -->
+        <!--copy file="./xml/xjava.dtd" todir="./examples"/-->
+        <!--xmlvalidate file="./examples/beautyJ.xml" failonerror="yes"/-->
+
+        <delete dir="./examples/beautified"/>
+        <mkdir dir="./examples/beautified"/>
+        <beautyj project.name="This Is My Test Class"
+                 project.version="0.8.15"
+                 author.name="My Name"
+                 author.email="my.name@somesite.com"
+                 doc="create"
+                 code.clean="yes"
+                 code.format="yes"
+                 d="${beautyj_home}/examples/beautified"
+                 verbose="yes">
+            <src path="${beautyj_home}/examples/"/>
+        </beautyj>
+
+        <beautyj xml.out="${beautyj_home}/examples/example.xml" xml.doctype="no" verbose="yes">
+            <src path="${beautyj_home}/examples"/>
+        </beautyj>
+        <!--xmlvalidate file="./examples/example.xml" failonerror="yes"/-->
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Compile BeautyJ, using the previously beautified sources.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="compile" depends="init,javacc,beautyj">
+        <javac destdir="${build}/classes" debug="true" deprecation="true">
+            <src path="${build}/src"/>
+            <classpath>
+              <pathelement location="${amoda_jar}"/>
+              <pathelement location="${ant_jar}"/>
+              <pathelement location="${build}/lib/xercesImpl.jar"/>
+              <pathelement location="${build}/lib/xmlParserAPIs.jar"/>
+              <pathelement path="${java.class.path}"/>
+            </classpath>
+        </javac>
+        <!-- copy internal configuration file application.xml, which is
+             loaded as resource from the classpath -->
+        <copy todir="${build}/classes/de/gulden/application/beautyj">
+            <fileset dir="${build}/src/de/gulden/application/beautyj">
+               <include name="application.xml"/>
+               <include name="application.dtd"/>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Create Javadoc files describing the Sourclet API
+         and Java source parser API.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="javadoc" depends="init,javacc,beautyj">
+        <delete dir="./doc/api" failonerror="no"/>
+        <mkdir dir="./doc/api"/>
+        <javadoc packagenames="de.gulden.util.javasource.*" excludepackagenames="de.gulden.util.javasource.jjt.*" sourcepath="${build}/src" destdir="./doc/api"
+                 windowtitle="BeautyJ - Customizable Java Source Code Transformer"
+                 doctitle="BeautyJ - Customizable Java Source Code Transformer&lt;/h2&gt;&lt;center&gt;&#169; &lt;a href='http://www.jensgulden.de/' target='_top'&gt;Jens Gulden&lt;/a&gt; 2002. Licensed under the &lt;a href='http://www.gnu.org/copyleft/gpl.html' target='_blank'&gt;GNU General Public License&lt;/a&gt;.&lt;/center&gt;&lt;h2&gt;">
+            <classpath path="${amoda_jar}"/>
+        </javadoc>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Pack compiled BeautyJ classes into a jar.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="jar" depends="compile,javadoc">
+        <!-- add AMODA classes directly to jar, the current AMODA version is
+             not mature enough to bundle the .jar-file  -->
+        <unjar src="${amoda_jar}" dest="${build}/classes"/>
+
+        <jar jarfile="./lib/beautyj.jar" compress="no" basedir="${build}/classes" manifest="make/JarManifest.mf">
+        </jar>
+        <delete dir="${build}/classes"/>
+        <copy todir="${build}/lib" file="./lib/beautyj.jar"/>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Create final distribution archive.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="distribution" depends="init,compile,jar,example">
+
+        <copy todir="${build}/bin" >
+          <fileset dir="bin/orig" >
+            <exclude name="**/.nbattrs"/>
+            <exclude name="**/filesystem.attributes"/>
+          </fileset>
+        </copy>
+
+        <copy todir="${build}/make">
+          <fileset dir="make" >
+            <include name="make.xml"/>
+            <include name="JarManifest.mf"/>
+          </fileset>
+        </copy>
+
+        <copy todir="${build}/doc" >
+          <fileset dir="doc" >
+            <exclude name="**/inc"/>
+            <exclude name="**/*.inc"/>
+            <exclude name="**/.nbattrs"/>
+            <exclude name="**/filesystem.attributes"/>
+          </fileset>
+        </copy>
+
+        <copy todir="${build}/examples" >
+          <fileset dir="examples" >
+            <exclude name="**/*.class"/>
+            <exclude name="**/.nbattrs"/>
+            <exclude name="**/filesystem.attributes"/>
+          </fileset>
+        </copy>
+
+        <copy todir="${build}/xml" >
+          <fileset dir="xml" >
+            <include name="xjava.dtd"/>
+          </fileset>
+        </copy>
+
+        <copy todir="${build}" >
+          <fileset dir="." >
+            <include name="Readme.txt"/>
+            <include name="License.txt"/>
+          </fileset>
+        </copy>
+
+        <zip zipfile="/tmp/${release_filename}.zip" compress="yes" basedir="${build}/../"/>
+
+        <copy file="/tmp/${release_filename}.zip"
+              tofile="make/distribution/${release_filename}.zip"/>
+    </target>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+         Main target to build everything.
+    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <target name="all" depends="init,jar,distribution">
+        <echo message="Build ok."/>
+    </target>
+
+</project>

@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    XJava Document Type Definition
+
+    This XML format is optionally used by BeautyJ to store Java source code.
+
+    Typical usage:
+    <?xml version="1.0"?>
+    <!DOCTYPE xjava SYSTEM "xjava.dtd">
+    <xjava>
+    ...
+    </xjava>
+
+    Version 1.0
+
+    Copyright (c) Jens Gulden, www.jensgulden.de.
+
+    Licensed under the GNU General Public License (GPL).
+    This comes with NO WARRANTY. See file licence.txt.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+<!ELEMENT xjava (package|class|interface)*>
+<!ATTLIST xjava
+    version CDATA #IMPLIED
+  >
+
+    <!ELEMENT package (package|class|interface)*>
+    <!ATTLIST package
+        name CDATA #REQUIRED
+      >
+
+        <!-- package members - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <!ELEMENT class (documentation?,import*,extends?,implements*,initializer?,(constructor|field|method|class)*,outerclass?)>
+        <!ATTLIST class
+            name CDATA #REQUIRED
+            unqualifiedName CDATA #REQUIRED
+            public (yes|no) "no"
+            packageprivate (yes|no) "no"
+            protected (yes|no) "no"
+            private (yes|no) "no"
+            final (yes|no) "no"
+            abstract (yes|no) "no"
+            static (yes|no) "no"
+          >
+
+            <!ELEMENT import (#PCDATA)>
+            <!ATTLIST import
+                kind (package|class) #REQUIRED
+              >
+
+            <!ELEMENT documentation (#PCDATA|tag)*>
+
+                <!ELEMENT tag (#PCDATA)>
+                <!ATTLIST tag
+                    type CDATA #REQUIRED
+                  >
+
+            <!ELEMENT extends EMPTY>
+            <!ATTLIST extends
+                class CDATA #REQUIRED
+              >
+
+            <!ELEMENT implements EMPTY>
+            <!ATTLIST implements
+                interface CDATA #REQUIRED
+              >
+
+            <!ELEMENT outerclass (#PCDATA)>
+
+            <!ELEMENT initializer (code)>
+
+                <!ELEMENT code (#PCDATA)>
+
+        <!ELEMENT interface (documentation?,import*,extends*,(field|method)*)>
+        <!ATTLIST interface
+            name CDATA #REQUIRED
+            unqualifiedName CDATA #REQUIRED
+            public (yes|no) "no"
+            packageprivate (yes|no) "no"
+            protected (yes|no) "no"
+            private (yes|no) "no"
+            final (yes|no) "no"
+          >
+
+            <!-- class members - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+            <!ELEMENT constructor (documentation?,parameter*,throws*,code)>
+            <!ATTLIST constructor
+                name CDATA #REQUIRED
+                unqualifiedName CDATA #REQUIRED
+                public (yes|no) "no"
+                packageprivate (yes|no) "no"
+                protected (yes|no) "no"
+                private (yes|no) "no"
+                final (yes|no) "no"
+              >
+
+                  <!ELEMENT parameter (tag?,type)>
+                  <!ATTLIST parameter
+                      name CDATA #REQUIRED
+                    >
+
+                      <!ELEMENT type EMPTY>
+                      <!ATTLIST type
+                          unqualifiedName CDATA #REQUIRED
+                          name CDATA #REQUIRED
+                          fullName CDATA #REQUIRED
+                          dimension CDATA "0"
+                        >
+
+                  <!ELEMENT throws EMPTY>
+                  <!ATTLIST throws
+                      exception CDATA #REQUIRED
+                    >
+
+            <!ELEMENT method (type,documentation?,parameter*,throws*,code?)>
+            <!ATTLIST method
+                name CDATA #REQUIRED
+                unqualifiedName CDATA #REQUIRED
+                public (yes|no) "no"
+                packageprivate (yes|no) "no"
+                protected (yes|no) "no"
+                private (yes|no) "no"
+                final (yes|no) "no"
+                abstract (yes|no) "no"
+                static (yes|no) "no"
+              >
+
+            <!ELEMENT field (type,documentation?,initializer?)>
+            <!ATTLIST field
+                name CDATA #REQUIRED
+                unqualifiedName CDATA #REQUIRED
+                public (yes|no) "no"
+                packageprivate (yes|no) "no"
+                protected (yes|no) "no"
+                private (yes|no) "no"
+                final (yes|no) "no"
+                abstract (yes|no) "no"
+                static (yes|no) "no"
+                transient (yes|no) "no"
+              >
+

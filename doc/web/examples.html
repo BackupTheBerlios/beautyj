@@ -1,0 +1,265 @@
+<!--INC:"include_top.inc"--><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+    <meta name="author" content="Jens Gulden">
+    <title>BeautyJ - Java Source Code Transformation Tool</title>
+    <script language="JavaScript">
+    <!--
+        var addr="beautyj";
+        var dom="jensgulden";
+        function nospam() {
+            var link="mailto:"+addr+"@"+dom+".de";
+            window.open(link);
+        }
+        function nospam_status() {
+            var st=addr+"@"+dom+".de";
+            window.status="Send a mail to "+st+" (spam-save JavaScript link).";
+        }
+      //-->
+    </script>
+  </head>
+
+  <body bgcolor="#dddddd">
+    <table cellpadding="0" cellspacing="0" border="2" width="100%" bordercolor="#000000">
+      <tbody>
+        <tr>
+          <td valign="top">
+            <table width="100%" border="0" cellpadding="5" cellspacing="0" style="page-break-before: always;">
+              <tbody>
+                <tr valign="top">
+                  <td bgcolor="#e6e6ff" valign="top">
+                    <p><img src="img/shinybean.gif" align="bottom" width="43" height="52" border="0"></p>
+                  </td>
+
+                  <td colspan="2" width="100%" bgcolor="#e6e6ff">
+                    <p style="font-style: normal;"><font face="Helvetica,Arial, sans-serif"><font size="1" style="font-size: 8pt;"><br>
+                    </font> <font size="6" style="font-size: 26pt;">BeautyJ</font></font></p>
+
+                    <p><font size="2"><font face="Helvetica,Arial, sans-serif">Customizable Java Source Code Transformation Tool<br>
+                    Distributed under the <a href="http://www.gnu.org/copyleft/gpl.html" target="_blank"><font color="#000000">GNU General Public License</font></a></font></font></p>
+                  </td>
+
+                  <td nowrap="nowrap" bgcolor="#e6e6ff" valign="bottom">
+                    <ul>
+                      <li><font face="Helvetica,Arial, sans-serif"><font size="3">Java Source Code Auto-Formatter<br>
+                       with customizable Sourclet API</font></font></li>
+
+                      <li><font face="Helvetica,Arial, sans-serif"><font size="3">Java-to-XML Converter</font></font></li>
+
+                      <li><font face="Helvetica,Arial, sans-serif"><font size="3">Reuseable Java Source Parser API</font></font></li>
+                    </ul>
+                  </td>
+                </tr>
+
+                <tr valign="top">
+                  <td nowrap colspan="3" bgcolor="#e6e6ff">
+                    <p align="left"><font size="3"><font face="Helvetica,Arial, sans-serif"><!--/INC:"include_top.inc"-->
+                      <a href="index.html"><font color="#000000">Home</font></a> &#8211;
+                      <a href="download.html"><font color="#000000">Download</font></a> &#8211;
+                      <a href="documentation.html"><font color="#000000">Documentation</font></a> &#8211;
+                      <a href="uml.html"><font color="#000000">UML</font></a> &#8211;
+                      <b>Examples</b> &#8211;
+                      <a href="faq.html"><font color="#000000">FAQ</font></a>
+<!--INC:"include_middle.inc"-->
+                    </font></font></p>
+                  </td>
+
+                  <td bgcolor="#e6e6ff">
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table cellpadding="5" cellspacing="2" border="0" width="100%">
+              <tbody>
+                <tr>
+                  <td bgcolor="#ffffff" valign="top"><!--/INC:"include_middle.inc"-->
+            <br>
+            Table of contents<br>
+            <ol>
+              <li><a href="#sourcecode">Source Code Beautification</a></li>
+              <li><a href="#xmlconversion">XML conversion</a></li>
+              <li><a href="#fullsizeexample">A full size example</a></li>
+            </ol>
+
+
+                        <h2>1.<a name="sourcecode"></a> Source Code
+                        Beautification</h2>
+                        <p>The following piece of code is valid and compilable, but not
+                        cleanly structured and hard to read:</p>
+<p><pre>import java.util.*;
+public class MyTestClass
+    extends MyBaseClass
+    {
+    public boolean isNameAvailable  ( String name ) {
+        return names.contains(name);
+    }
+
+    public MyTestClass()
+    {
+        names=new Vector();
+    }
+
+protected Vector names;
+
+public
+static int countUppercaseLetters(String name) {
+        int count=0;
+        String s=name.toLowerCase();
+        for (int i=0;i&lt;s.length();i++) {
+            if (name.charAt(i)!=s.charAt(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public void addName(String name)
+    {
+        // add a new element to the set of names
+        // This dead code here to demonstrate the auto-remove feature activated by option '-code.clean'):   ;
+        // String name=address.getName();
+        // nameHashtable.put(name,address);
+        names.addElement(name);
+    } }
+</pre></p>
+
+                        <p>Configuring BeautyJ to perform a maximum of automatic
+                        transformation on the code, the command line call is</p>
+                        <p><code><font size="3">java -jar beautyJ.jar "-project.name=This
+                        Is My Test Class" "-author.name=Toby Tester"
+                        -author.email=t.tester@somesite.com -doc=create -code.clean
+                        -d=/e/projects/beautyj/example/beautified
+                        /e/projects/beautyj/example/MyTestClass.java</font></code></p>
+                        <p>The auto-formatted code looks like this:</p>
+
+<p><pre>/*
+ * Class:   MyTestClass
+ *
+ * Date:    2002-10-13
+ *
+ */
+
+
+import java.util.*;
+
+/**
+ */
+public class MyTestClass extends MyBaseClass {
+
+    // ------------------------------------------------------------------------
+    // --- field                                                            ---
+    // ------------------------------------------------------------------------
+
+    /**
+     */
+    protected Vector names;
+
+
+    // ------------------------------------------------------------------------
+    // --- constructor                                                      ---
+    // ------------------------------------------------------------------------
+
+    /**
+     */
+    public MyTestClass() {
+        names=new Vector();
+    }
+
+
+    // ------------------------------------------------------------------------
+    // --- methods                                                          ---
+    // ------------------------------------------------------------------------
+
+    /**
+     */
+    public boolean isNameAvailable(String name) {
+        return names.contains(name);
+    }
+
+    /**
+     */
+    public void addName(String name) {
+        // add a new element to the set of names
+        // This dead code here to demonstrate the auto-remove feature activated by option '-code.clean'):   ;
+        // String name=address.getName();
+        // nameHashtable.put(name,address);
+        names.addElement(name);
+    }
+
+
+    // ------------------------------------------------------------------------
+    // --- static method                                                    ---
+    // ------------------------------------------------------------------------
+
+    /**
+     */
+    public static int countUppercaseLetters(String name) {
+        int count=0;
+        String s=name.toLowerCase();
+        for (int i=0;i&lt;s.length();i++) {
+            if (name.charAt(i)!=s.charAt(i)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+} // end MyTestClass
+</pre></p>
+
+                        <h2>2. <a name="xmlconversion"></a>XML conversion</h2>
+                        <p>Java source code can also be converted to an XML representation
+                        which follows the syntax specified by the <a href="../../xml/xjava.dtd">Xjava DTD</a>.
+                        <br>This is the command-line call to perform the XML conversion:</p>
+                        <p><code><font size="3">java -jar beautyJ.jar
+                        -xml.out=beautyjSrc.xml -doctype
+                        /e/projects/beautyj/example/MyTestClass.java</font></code></p>
+                        <p>Alternatively, the <code>java2xml</code> wrapper class can be
+                        invoked, which uses a slightly simplified syntax. (It has the
+                        <code>xml2java</code> counterpart for converting XML back to
+                        Java.) The following example assumes that <code>beautyJ.jar</code>
+                        is already part of the classpath:</p>
+                        <p><code><font size="3">java java2xml -out=beautyjSrc.xml -doctype
+                        /e/projects/beautyj/example/MyTestClass.java</font></code></p>
+                        <p>This is the generated XML result:</p>
+<pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>&lt;!DOCTYPE xjava SYSTEM "xjava.dtd"&gt;<br>&lt;xjava&gt;&lt;class name="MyTestClass" unqualifiedName="MyTestClass"<br>            public="yes"&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;import<br>            kind="package"/&gt;&lt;extends class="MyBaseClass"/&gt;&lt;field<br>            name="MyTestClass.names" unqualifiedName="names"<br>                protected="yes"&gt;&lt;type name="java.util.Vector"<br>                unqualifiedName="Vector" dimension="0"<br>            fullName="java.util.Vector"/&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;/field&gt;&lt;constructor<br>            name="MyTestClass.MyTestClass" unqualifiedName="MyTestClass"<br>            public="yes"&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;code&gt;{<br>        names=new Vector(); <br>    }&lt;/code&gt;&lt;/constructor&gt;&lt;method<br>            name="MyTestClass.isNameAvailable"<br>            unqualifiedName="isNameAvailable" public="yes"&gt;&lt;type<br>                name="boolean" unqualifiedName="boolean" dimension="0"<br>                fullName="boolean"/&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;parameter<br>                    name="name"&gt;&lt;type name="java.lang.String"<br>                    unqualifiedName="String" dimension="0"<br>            fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        return names.contains(name);<br>    }&lt;/code&gt;&lt;/method&gt;&lt;method<br>            name="MyTestClass.addName" unqualifiedName="addName"<br>                public="yes"&gt;&lt;type name="void" unqualifiedName="void"<br>                dimension="0"<br>                fullName="void"/&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;parameter<br>                    name="name"&gt;&lt;type name="java.lang.String"<br>                    unqualifiedName="String" dimension="0"<br>            fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        // add a new element to the set of names<br>        // This dead code here to demonstrate the auto-remove feature activated by option '-code.clean'):   ;<br>        // String name=address.getName();<br>        // nameHashtable.put(name,address);<br>        names.addElement(name);<br>    }&lt;/code&gt;&lt;/method&gt;&lt;method<br>            name="MyTestClass.countUppercaseLetters"<br>            unqualifiedName="countUppercaseLetters" static="yes"<br>                public="yes"&gt;&lt;type name="int" unqualifiedName="int"<br>                dimension="0"<br>                fullName="int"/&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;parameter<br>                    name="name"&gt;&lt;type name="java.lang.String"<br>                    unqualifiedName="String" dimension="0"<br>        fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        int count=0;<br>        String s=name.toLowerCase();<br>        for (int i=0;i&lt;s.length();i++) {<br>            if (name.charAt(i)!=s.charAt(i)) {<br>                count++;<br>            }<br>        }<br>        return count;<br>    }&lt;/code&gt;&lt;/method&gt;&lt;/class&gt;&lt;class<br>        name="MyBaseClass" unqualifiedName="MyBaseClass"<br>            public="yes"&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;extends<br>            class="java.lang.Object"/&gt;&lt;constructor<br>            name="MyBaseClass.MyBaseClass" unqualifiedName="MyBaseClass"<br>        public="yes"&gt;&lt;documentation&gt;&lt;/documentation&gt;&lt;code&gt;{<br>    }&lt;/code&gt;&lt;/constructor&gt;&lt;/class&gt;&lt;class<br>        name="MyTestClass" unqualifiedName="MyTestClass"<br>            public="yes"&gt;&lt;import kind="package"/&gt;&lt;extends<br>            class="MyBaseClass"/&gt;&lt;field name="MyTestClass.names"<br>            unqualifiedName="names" protected="yes"&gt;&lt;type<br>                name="java.util.Vector" unqualifiedName="Vector"<br>                dimension="0"<br>            fullName="java.util.Vector"/&gt;&lt;/field&gt;&lt;constructor<br>            name="MyTestClass.MyTestClass" unqualifiedName="MyTestClass"<br>            public="yes"&gt;&lt;code&gt;{<br>        names=new Vector(); <br>    }&lt;/code&gt;&lt;/constructor&gt;&lt;method<br>            name="MyTestClass.isNameAvailable"<br>            unqualifiedName="isNameAvailable" public="yes"&gt;&lt;type<br>                name="boolean" unqualifiedName="boolean" dimension="0"<br>                fullName="boolean"/&gt;&lt;parameter name="name"&gt;&lt;type<br>                    name="java.lang.String" unqualifiedName="String"<br>                    dimension="0"<br>            fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        return names.contains(name);<br>    }&lt;/code&gt;&lt;/method&gt;&lt;method<br>            name="MyTestClass.countUppercaseLetters"<br>            unqualifiedName="countUppercaseLetters" static="yes"<br>                public="yes"&gt;&lt;type name="int" unqualifiedName="int"<br>                dimension="0" fullName="int"/&gt;&lt;parameter<br>                    name="name"&gt;&lt;type name="java.lang.String"<br>                    unqualifiedName="String" dimension="0"<br>            fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        int count=0;<br>        String s=name.toLowerCase();<br>        for (int i=0;i&lt;s.length();i++) {<br>            if (name.charAt(i)!=s.charAt(i)) {<br>                count++;<br>            }<br>        }<br>        return count;<br>    }&lt;/code&gt;&lt;/method&gt;&lt;method<br>            name="MyTestClass.addName" unqualifiedName="addName"<br>                public="yes"&gt;&lt;type name="void" unqualifiedName="void"<br>                dimension="0" fullName="void"/&gt;&lt;parameter<br>                    name="name"&gt;&lt;type name="java.lang.String"<br>                    unqualifiedName="String" dimension="0"<br>        fullName="java.lang.String"/&gt;&lt;/parameter&gt;&lt;code&gt;{<br>        // add a new element to the set of names<br>        // This dead code here to demonstrate the auto-remove feature activated by option '-code.clean'):   ;<br>        // String name=address.getName();<br>        // nameHashtable.put(name,address);<br>        names.addElement(name);<br>    }&lt;/code&gt;&lt;/method&gt;&lt;/class&gt;&lt;class<br>        name="MyBaseClass" unqualifiedName="MyBaseClass"<br>            public="yes"&gt;&lt;extends class="java.lang.Object"/&gt;&lt;constructor<br>            name="MyBaseClass.MyBaseClass" unqualifiedName="MyBaseClass" public="yes"&gt;&lt;code&gt;{<br>    }&lt;/code&gt;&lt;/constructor&gt;&lt;/class&gt;&lt;/xjava&gt;<br></pre>
+                        <h2>3. <a name="fullsizeexample"></a>A<font size="5"> full size
+                        example</font></h2>
+                        <p><font size="3"><a href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/beautyj/"><u>Browse the BeautyJ
+                        source codes</u></a> online to see a full-size example of
+                        auto-formatted code generated by BeautyJ. There is also a <a href="../../examples/beautyJ.xml">complete
+                        XJava XML representation</a> of the BeautyJ sources.</font></p>
+                        <p><font size="3">All examples on this page are also contained in
+                        the distribution archive which is available on the <a href="download.html">download page</a>.</font></p>
+<!--INC:"include_bottom.inc"-->
+                    <br>
+                    <table width="100%"><tr>
+                    <td width="33%">
+                      &nbsp;
+                    </td>
+                    <td align="center">
+                      <font size="2">
+                      &copy; <a href="http://www.jensgulden.de/"><font color="#000000">Jens Gulden</font></a> 2002<br>
+                      <a href="mail_nospam.html" onclick="nospam();return false" onmouseover="nospam_status();return true" onmouseout="window.status='';return true"><font color="#000000">Send a mail</font></a>
+                      </font>
+                    </td>
+                    <td width="33%" align="right" valign="bottom">
+                      <font size="2">
+                      Hosted on <a href="http://developer.berlios.de/projects/beautyj"><img src="http://developer.berlios.de/sflogo.php?group_id=555&type=1" alt="berliOS" border="0"/></a>
+                      </font>
+                    </td>
+                    </tr></table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html><!--/INC:"include_bottom.inc"-->

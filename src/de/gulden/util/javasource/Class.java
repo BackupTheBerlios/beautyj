@@ -4,6 +4,7 @@
  * Version: 1.1
  *
  * Date:    2004-09-29
+ *             2006-03-09 (v. 1.1.1, correction of bug in handling of interface-inheritance in initFromXML(..))
  *
  * Note:    Contains auto-generated Javadoc comments created by BeautyJ.
  *  
@@ -26,7 +27,7 @@ import java.util.*;
  * Represents a Java class or interface declaration.
  *  
  * @author  Jens Gulden
- * @version  1.1
+ * @version  1.1.1
  */
 public class Class extends SourceObjectDeclaredVisible implements PackageMember {
 
@@ -364,22 +365,36 @@ public class Class extends SourceObjectDeclaredVisible implements PackageMember 
             myImport.addElement(im);
         }
 
-        // superclass
-        Element sup=XMLToolbox.getChild(element,"extends");
-        if (sup!=null) {
-            superclassName=XMLToolbox.getAttributeRequired(sup,"class");
-        }
-        else {
-            superclassName="java.lang.Object";
-        }
+        if ( ! interfaceFlag ) { // class
+        	
+            // superclass
+            Element sup=XMLToolbox.getChild(element,"extends");
+            if (sup!=null) {
+                superclassName=XMLToolbox.getAttributeRequired(sup,"class");
+            } else {
+                superclassName="java.lang.Object";
+            }
 
-        // implemented interfaces
-        interfaceNames.removeAllElements();
-        nl=XMLToolbox.getChildren(element,"implements");
-        for (int i=0;i<nl.getLength();i++) {
-            Element imE=(Element)nl.item(i);
-            String imp=XMLToolbox.getAttributeRequired(imE,"interface");
-            interfaceNames.addElement(imp);
+            // implemented interfaces
+            interfaceNames.removeAllElements();
+            nl=XMLToolbox.getChildren(element,"implements");
+            for (int i=0;i<nl.getLength();i++) {
+                Element imE=(Element)nl.item(i);
+                String imp=XMLToolbox.getAttributeRequired(imE,"interface");
+                interfaceNames.addElement(imp);
+            }
+
+        } else { // interface
+        	
+            // extented interfaces
+            interfaceNames.removeAllElements();
+            nl=XMLToolbox.getChildren(element,"extends");
+            for (int i=0;i<nl.getLength();i++) {
+                Element imE=(Element)nl.item(i);
+                String imp=XMLToolbox.getAttributeRequired(imE,"interface");
+                interfaceNames.addElement(imp);
+            }
+
         }
 
         // initializer
@@ -395,7 +410,7 @@ public class Class extends SourceObjectDeclaredVisible implements PackageMember 
             	instanceInitializers.addElement(initializer);
             }
         }
-
+        
         // members
         myMember.removeAllElements();
 

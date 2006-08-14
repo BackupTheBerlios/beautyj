@@ -32,7 +32,7 @@
 
         <!-- package members - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <!ELEMENT class (documentation?,import*,extends?,implements*,initializer?,(constructor|field|method|class)*,outerclass?)>
+        <!ELEMENT class (documentation?,import*,extends?,implements*,initializer?,(constructor|field|method|class|interface)*,outerclass?)>
         <!ATTLIST class
             name CDATA #REQUIRED
             unqualifiedName CDATA #REQUIRED
@@ -74,7 +74,7 @@
 
                 <!ELEMENT code (#PCDATA)>
 
-        <!ELEMENT interface (documentation?,import*,extends*,(field|method)*)>
+        <!ELEMENT interface (documentation?,import*,extends*,(field|method|interface)*)>
         <!ATTLIST interface
             name CDATA #REQUIRED
             unqualifiedName CDATA #REQUIRED

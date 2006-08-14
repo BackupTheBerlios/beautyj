@@ -358,7 +358,9 @@ public class Class extends SourceObjectDeclaredVisible implements PackageMember 
         interfaceFlag=element.getTagName().equals("interface");
 
         // imports
-        myImport.removeAllElements();
+        if ( ! ( this instanceof ClassInner ) ) { // fixed bug #006762: myImport is shared between outer and inner class/interface, see ClassInner.setDeclaringClass(..)
+            myImport.removeAllElements();
+        }
         NodeList nl=XMLToolbox.getChildren(element,"import");
         for (int i=0;i<nl.getLength();i++) {
             Import im=Import.createFromXML(getPackage(),(Element)nl.item(i));
